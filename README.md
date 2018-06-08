@@ -112,5 +112,5 @@ mark the 2 spaces between parms
 </project>
 ```
 ## Active Project
-* [BSRN Cabauw](http://projects.knmi.nl/cabauw/bsrn/) - Baseline Surface Radiation Network at Cabauw, Netherlands
+* [BSRN Cabauw](http://www.knmi.nl/bsrn/) - Baseline Surface Radiation Network at Cabauw, Netherlands
 
