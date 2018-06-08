@@ -1,20 +1,20 @@
 # example netcdf content
 
 ## dimensions
-dim_0.08333Hz	length = 7200; (index)
-dim_0.083333Hz	length = 7200; (index)
-dim_1Hz	length = 86400; (index)
-dim_0.0166667Hz	length = 1440; (index)
+* dim_0.08333Hz	length = 7200; (index)
+* dim_0.083333Hz	length = 7200; (index)
+* dim_1Hz	length = 86400; (index)
+* dim_0.0166667Hz	length = 1440; (index)
 
 ## global attributes
-EXPERIMENT	CABSURF
-SOURCE	EAS
-DATE	1528416000
-STOP	1528502400
-RUN	1
-measured_quantities	datetime,air-soil-temperature,groundwaterlevel,soilfluxes,scintillo
-instruments	psychrometer, pyrometer, fluxmeter, temp, precipitation
-device_0_NX_SIAM	engelse put
+* EXPERIMENT	CABSURF
+* SOURCE	EAS
+* DATE	1528416000
+* STOP	1528502400
+* RUN	1
+* measured_quantities	datetime,air-soil-temperature,groundwaterlevel,soilfluxes,scintillo
+* instruments	psychrometer, pyrometer, fluxmeter, temp, precipitation
+* device_0_NX_SIAM	engelse put
 device_1_CAB-P	psychrometer at 1, 2 and 3 meter above ground
 device_2_CAB-P	bodem temperatuur
 device_3_CAB-P	bodem temperatuur
