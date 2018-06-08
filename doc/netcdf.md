@@ -225,6 +225,23 @@ CABGW0-SL_P
 CABGW0-WS_STAT
 CABGW0-WS_TEMP
 CABGW0-WS_P
+   float CABGW0-WS_P(dim_0.0166667Hz=1440);
+     :RDATE = 1528416000; // int
+     :START = 1528416000; // int
+     :STOP = 1528502400; // int
+     :instrum = "0";
+     :sn = "434047";
+     :Unit = "Pa";
+     :caldate = "";
+     :CURPOS = 0; // int
+     :A = 1.0f; // float
+     :B = 0.0f; // float
+     :C = 0.0f; // float
+     :D = 0.0f; // float
+     :k1 = 0.0f; // float
+     :k2 = 0.0f; // float
+     :dt = 59.999996f; // float
+     :_FillValue = -99999.0f; // float
 CABGW0-WN_STAT
 CABGW0-WN_TEMP
 CABGW0-WN_P
