@@ -1,13 +1,17 @@
-# example netcdf content
+# NETCDF USE
+A device (sensor) has a sample frequency, this frequency determines the dimension needed to store its raw data for a certain runlength. Durng the initialization cycle the sample freq of each sensor is stored in a device structure. When sensor rawdata becomes available the system checks if the current storage runfile is present, if not it will create an empty container and opens it for writing. In an empty container all the variable data arrays are present for the complete runlength of all variables and contain a NAN. PE sample every 12s and runlength is 600 gives 600/12 = 50 elements for the array. This means that the file size is fixed. After starting acquisition at a certain moment in time the samples of variables will be written to a fixed index determined by the variable sample frequency and the system clock.   
 
-## dimensions
+
+## example netcdf content
+
+### dimensions
 ```
 dim_0.08333Hz	length = 7200; (index)
 dim_0.083333Hz	length = 7200; (index)
 dim_1Hz	length = 86400; (index)
 dim_0.0166667Hz	length = 1440; (index)
 ```
-## global attributes
+### global attributes
 ```
 EXPERIMENT	CABSURF
 SOURCE	EAS
@@ -42,7 +46,7 @@ affiliation	KNMI - Royal Netherlands Meteorological Institute
 pi	John Doe(john.doe@doe.do)
 url	http://projects.knmi.nl/cabauw/insitu/index2.htm
 ```
-## variables
+### variables
 ```
 RAINE-TIME_S
 RAINE-NI_LCST
