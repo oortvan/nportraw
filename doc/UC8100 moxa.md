@@ -63,17 +63,17 @@
 "
 3.	file nsswitch.conf moet OK zijn
 "
-passwd:         compat
-group:          compat
-shadow:         compat
-gshadow:        files
-hosts:          files dns
-networks:       files
-protocols:      db files
-services:       db files
-ethers:         db files
-rpc:            db files
-netgroup:       nis
+	passwd:         compat
+	group:          compat
+	shadow:         compat
+	gshadow:        files
+	hosts:          files dns
+	networks:       files
+	protocols:      db files
+	services:       db files
+	ethers:         db files
+	rpc:            db files
+	netgroup:       nis
 "
 ```
 ## NETCDF LIBRARIES INSTALLEREN met apt-get
@@ -98,18 +98,18 @@ netgroup:       nis
 ```
 ## TIJD ZAKEN
 ```
-1. command instellen tijdzone naar UTC
+1.	command instellen tijdzone naar UTC
 	timedatectl set-timezone Europe/London
-2. lijst met mogelijk in te stellen tijdzone's via command weergeven
+2.	lijst met mogelijk in te stellen tijdzone's via command weergeven
 	timedatectl list-timezone
-3. tijd synchronisatie mbv ntp server, via volgende commands in een script
+3.	tijd synchronisatie mbv ntp server, via volgende commands in een script
 	ntpdate 145.23.128\132.5
 	hwclock -w
-4.	In crontab iedere 10 min */10 * * * * het script van 3 starten
+4.	In crontab iedere 10 min */10 * * *  het script van 3 starten
 ```	
 ## HTTP SERVER APACHE2
 ```
-1. php5 installeren
+1.	php5 installeren
 	apt-get install php5-cli php5-fpm php5-mysql libapache2-mod-php5
 	of misschien
 	apt-get install php5 libapache2-mod-php5
@@ -144,8 +144,8 @@ Nog onderzoeken hoe rsyslog precies werkt
 2.	hoe de mount doen
 	if [ ! -e "/home/data" ] # project folder present
 	then
-		mkdir /home/data
-		mount -t nfs knmi-cbsql-w01p.knmi.nl:/knmi_acq /home/data
+		mkdir localpath
+		mount -t nfs servername:/sharename localpath
 	fi
 3.	KNMI_ACQ share vanuit de knmi-cbsql-w01p voor de UC8100 vrijgeven
 	Via RDP dit uitvoeren, zie folder properties nfs sharing 
@@ -158,7 +158,7 @@ Nog onderzoeken hoe rsyslog precies werkt
 2.	install the g++ compiler
 	apt-get -y install g++
 	apt-get -y install g++-4.9
-3.install the make utillity
+3.	install the make utillity
 	apt-get -y install make
 ```
 
