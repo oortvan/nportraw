@@ -124,8 +124,7 @@
 6.	php5 deamon starten, niet helemaal duidelijk of dit nodig is
 	/etc/init.d/php5-fpm start
 
-Zie ook 
-https://www.howtoforge.com/installing-apache2-with-php5-and-mysql-support-on-debian-wheezy
+[Zie ook](https://www.howtoforge.com/installing-apache2-with-php5-and-mysql-support-on-debian-wheezy) - howtoforge
 ```
 ## SYSTEM LOGGING MET RSYSLOG
 ```
