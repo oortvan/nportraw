@@ -35,8 +35,7 @@ device_11_CAB-H	infrared heiman
 device_12_CAB-M	bodemvocht
 device_13_CAB-M	bodemvocht
 device_14_CAB-S	grondwater
-device_15_CAB-S	psychrometer at 1, 2 and 3 meter above ground
-device_16_MKII	scintillometer
+device_15_MKII	scintillometer
 location	CABAUW - CESAR observatory, the Netherlands
 longitude	4.92619
 latitude	51.97027
