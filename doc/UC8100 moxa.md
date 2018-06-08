@@ -1,10 +1,9 @@
-# INSTALLATIE UC8100LX
+# INSTALLATIE UC8100LX DEBIAN8 jessie
 
 ## Wat algemene opmerkingen
 ```
 1.	Om te onderzoeken of een package bestaat, of wat de naam precies is
-	gebruik dan dit commando, '....' wordt als onderdeel van een package
-	naam gebruikt
+	gebruik dan dit commando:
 	apt-cache search --names-only '....'
 ```
 ## MOXA DIRECTORIES AANMAKEN
