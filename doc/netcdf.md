@@ -15,30 +15,30 @@
 * measured_quantities	datetime,air-soil-temperature,groundwaterlevel,soilfluxes,scintillo
 * instruments	psychrometer, pyrometer, fluxmeter, temp, precipitation
 * device_0_NX_SIAM	engelse put
-device_1_CAB-P	psychrometer at 1, 2 and 3 meter above ground
-device_2_CAB-P	bodem temperatuur
-device_3_CAB-P	bodem temperatuur
-device_4_CAB-P	bodem temperatuur
-device_5_CAB-P	bodem temperatuur
-device_6_CAB-F	bodemwarmteflux
-device_7_CAB-F	bodemwarmteflux
-device_8_CAB-F	bodemwarmteflux
-device_9_CAB-H	infrared heiman
-device_10_CAB-H	infrared heiman
-device_11_CAB-H	infrared heiman
-device_12_CAB-M	bodemvocht
-device_13_CAB-M	bodemvocht
-device_14_CAB-S	grondwater
-device_15_CAB-S	psychrometer at 1, 2 and 3 meter above ground
-device_16_MKII	scintillometer
-location	CABAUW - CESAR observatory, the Netherlands
-longitude	4.92619
-latitude	51.97027
-altitude	1.8
-runlength	86400
-affiliation	KNMI - Royal Netherlands Meteorological Institute
-pi	Fred Bosveld(fred.bosveld@knmi.nl)
-url	http://projects.knmi.nl/cabauw/insitu/index2.htm
+* device_1_CAB-P	psychrometer at 1, 2 and 3 meter above ground
+* device_2_CAB-P	bodem temperatuur
+* device_3_CAB-P	bodem temperatuur
+* device_4_CAB-P	bodem temperatuur
+* device_5_CAB-P	bodem temperatuur
+* device_6_CAB-F	bodemwarmteflux
+* device_7_CAB-F	bodemwarmteflux
+* device_8_CAB-F	bodemwarmteflux
+* device_9_CAB-H	infrared heiman
+* device_10_CAB-H	infrared heiman
+* device_11_CAB-H	infrared heiman
+* device_12_CAB-M	bodemvocht
+* device_13_CAB-M	bodemvocht
+* device_14_CAB-S	grondwater
+* device_15_CAB-S	psychrometer at 1, 2 and 3 meter above ground
+* device_16_MKII	scintillometer
+* location	CABAUW - CESAR observatory, the Netherlands
+* longitude	4.92619
+* latitude	51.97027
+* altitude	1.8
+* runlength	86400
+* affiliation	KNMI - Royal Netherlands Meteorological Institute
+* pi	John Doe(john.doe@doe.do)
+* url	http://projects.knmi.nl/cabauw/insitu/index2.htm
 
 ## variables
 RAINE-TIME_S
