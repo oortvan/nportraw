@@ -1,0 +1,77 @@
+// strategy of having 2 netcdf files open to deal with lagging device data
+// a file can be closed when all devices have entered the next file interval
+// the next file must be opened as soon as a device has entered the next file
+// interval  
+
+typedef struct file_info{
+	int ncid;			// file handle from netcdf
+	bool open;          // is file open
+	std::string fname;  // name of file = projectname_yyyymmdd_hhMM.cdf
+	int dayindex;       // a day can be divided in n=86400/runlen files, given
+						// a run length in seconds; index = secofday div runlen
+	int devcnt;			// counts up when more devices use it and counts down
+						// when device switch to next file
+	struct timeval last_used; 	// how long ago was the last use of this netcdf
+								// file handle
+};
+
+struct nc_info{
+	std::string netcdf_name;  // the file name
+
+	// global attributes
+	//std::list<Tnc_attributes> global_attribs; // will contain the netcdf
+												// global attributes
+	struct Tnc_attribtext experiment, source, location, affiliation;
+	struct Tnc_attribfloat longitude, latitude, altitude;
+	struct Tnc_attribtime date, stop;
+	struct Tnc_attribint run, runlength;
+	// dimensions
+	struct Tnc_dim dim_1s, dim_12s, dim_30s, dim_60s, dim_01s;
+	// local variables	
+	int ncid;			// netcdf file handle
+	int retval;
+	struct file_info finfo[2];	// use 2 file handles to overlap file boundaries
+								// for all devices
+};
+
+struct nc_info nc;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Acties bij het schrijven van data door een device
+
+Mogelijke condities:
+
+a.	Applicatie is net gestart en het is de eerste data die wordt weggeschreven
+	door een device.
+b.	Een device wil wegschrijven maar de netcdf pointer in de tcp struct is leeg.
+c.	Een device wil wegschrijven en de netcdf pointer in de tcp struct is actief.
+d.	Applicatie wil een lege netcdf container maken.
+
+struct nc_info nc;
+
+CONDITIE a
+1.	Gebruik de netcdf struct 0 van de array
+2.	Maak de filenaam
+3.	Open of creeer de netcdf container
+4.	Set de count variable van nc_info[0]: +1
+5.	Stel de index variable van nc_info in
+6.	Geef de positie van nc_info.finfo[0] door als pointer aan het device
+
+CONDITIE b
+1.	Test waar de index zich bevindt, finfo[0 of 1] zijn, indien voor beide de
+	count variable op 0 is dan CONDITIE a
+2.	De index is gevonden, verhoog count +1 en geef de positie van de gevonden
+	finfo[0 of 1] door als pointer aan het device
+
+CONDITIE c
+1a	Als de index nog overeen komt met de index in finfo dan kan er worden
+	weggeschreven
+1b	Als de index groter is dan de index in finfo pointer en die grotere index
+	bevindt zich al in finfo[0 of 1]: verlaag device count in de huidige
+	finfo. 
+	Als count na verlaging 0 is dan de netcdf sluiten die erbij hoort en de
+	pointer van finfo[0 of 1] waar de nieuwe index bijhoort toekennen aan
+	het device. De file is nu gereed en kan in de upload que (/tmp/eas_todo)
+	worden gezet.
+
