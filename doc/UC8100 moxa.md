@@ -22,7 +22,7 @@
 ## NETWERK INSTELLINGEN
 ```
 1.	file /etc/network/interfaces aanpassen hier een voorbeeld, 
-	voor CABAUW 145.23.96.[...] gebruiken in eth1
+	voor CABAUW 145.23.cabsubnet.[...] gebruiken in eth1
 "
 	# interfaces(5) file used by ifup(8) and ifdown(8)
 	# Include files from /etc/network/interfaces.d:
@@ -37,11 +37,11 @@
 			broadcast 192.168.3.255
 
 	iface eth1 inet static
-		address 145.23.197.186
-		network 145.23.197.0
+		address 145.23.abc.???
+		network 145.23.abc.0
 		netmask 255.255.255.0
-		gateway 145.23.197.1
-		broadcast 145.23.197.255
+		gateway 145.23.abc.1
+		broadcast 145.23.abc.255
 "
 ```
 ## DNS INSTELLINGEN
@@ -49,16 +49,16 @@
 1.	file /etc/hosts aanpassen
 "
 	127.0.0.1	localhost Moxa
-	145.23.128.5	nameserver
-	145.23.132.5	nameserver
+	dns1	nameserver
+	dns2	nameserver
 "
 2.	file /etc/resolv.conf aanpassen
 "
 	#nameserver 8.8.4.4
 	#nameserver 8.8.8.8
 	#nameserver 10.128.8.5
-	nameserver 145.23.128.5
-	nameserver 145.23.132.5
+	nameserver dns1
+	nameserver dns2
 "
 3.	file nsswitch.conf moet OK zijn
 "
@@ -102,7 +102,7 @@
 2.	lijst met mogelijk in te stellen tijdzone's via command weergeven
 	timedatectl list-timezone
 3.	tijd synchronisatie mbv ntp server, via volgende commands in een script
-	ntpdate 145.23.128\132.5
+	ntpdate dns1\dns2
 	hwclock -w
 4.	In crontab iedere 10 min */10 * * *  het script van 3 starten
 ```	
