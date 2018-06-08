@@ -4,10 +4,11 @@ Multi threaded acquisition system
 ## properties
 * xml config file contains application parameters
 * raw data comes from network (IP:PORT), serial interface (RS232|422|485)
-* interfacing for GILL-R3, LICOR-7500RS, KNMI-SIAM, KIPP-XLAS
+* interfacing for GILL-R3, LICOR-7500RS, KNMI-SIAM, KIPP-XLAS, PT-3002 pan/tilt unit
 * device sample rates upto 50Hz tested
 * raw and meta data is stored with netcdf
 * device data is synchronized with the system clock
+* empty container principle
 
 ## xml configuration
 * project parameters
