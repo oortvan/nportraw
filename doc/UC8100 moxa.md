@@ -142,7 +142,7 @@ Nog onderzoeken hoe rsyslog precies werkt
 1.	NFS package install
 	apt-get -y install nfs-common
 2.	hoe de mount doen
-	if [ ! -e "/home/data" ] # project folder present
+	if [ ! -e "localpath" ] # project folder present
 	then
 		mkdir localpath
 		mount -t nfs servername:/sharename localpath
