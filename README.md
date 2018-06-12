@@ -63,7 +63,7 @@ Multi threaded acquisition system
 <dt>12</dt>
 <ADS_min>-32768</ADS_min>
 <ADS_max>32767</ADS_max>
-<Missing_value>-999</Missing_value>
+<Missing_value>-999999</Missing_value>
 <comment>enable websocket server capabillity</comment>
 <altitude>1.8</altitude>
 <no_write>1</no_write>
