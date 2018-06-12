@@ -1,6 +1,8 @@
-# Time Synchronisation 
+# Time Synchronisation
+The basis of the time synchronizatie lies in
+* Linux is a realtime operating system
+* The system clock is used during acquisition
 ## Sonic anemometer Gill-R3 and Gas-Analyzer LICOR-7500RS
-
 When calculating fluxes from turbulence measurements it is very important to know the time lack between samples from different instruments.  This time lack is considered constant, samples from instrument A and B must be time synchronized to get this constant time lack. In NPORTRAW 10Hz raw data from GILL-R3 and LI7500RS is synchronized using:
 * The synchronized clock of the linux host system.
 Linux is a realtime operating system and NPORTRAW runs with a high priority. The system clock is synced with either ntp or ptpd, both seem to work satisfactory
