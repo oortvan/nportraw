@@ -10,3 +10,5 @@ The Gill-R3 runs in a non-polling mode, samples are streamed with a fixed time i
 From the GILL-R3 50Hz data stream samples are picked that best agree with the 0.1 .. 0.9 moments. The time info of the synced samples is used to index samples in the netcdf raw data file. 
 * Synchronizing the internal clock of the LI7500RS (linux) with the host clock.
 The LI7500RS runs in a non-polling mode at 10Hz, in its output message date-time information is present, where the 1/10 s info runs from 0.1 .. 0.9 equal to that where the GILL-R3 oversampled stream is synced at. The time info coming from the LI7500RS is used for indexing samples in the netcdf raw data file.
+## SIAM data
+A SIAM is not synchronized by an external clock and standars sample rate intervals are 1, 12, 30 and 60 seconds.
