@@ -144,7 +144,7 @@ Nog onderzoeken hoe rsyslog precies werkt
 		mkdir localpath
 		mount -t nfs servername:/sharename localpath
 	fi
-3.	KNMI_ACQ share vanuit de knmi-cbsql-w01p voor de UC8100 vrijgeven
+3.	KNMI_ACQ share vanuit de servername voor de UC8100 vrijgeven
 	Via RDP dit uitvoeren, zie folder properties nfs sharing 
 ```
 ## GCC en G++ COMPILERS INSTALLEREN
