@@ -1,5 +1,5 @@
 # Time Synchronisation
-The basis of the time synchronizatie lies in
+The basis of the time synchronization lies in
 * Linux is a realtime operating system
 * The system clock is used during acquisition
 ## Sonic anemometer Gill-R3 and Gas-Analyzer LICOR-7500RS
