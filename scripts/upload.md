@@ -27,7 +27,7 @@ function go_upload {
 	if [ ! -e "/home/data" ] # project folder present
 	then
 		mkdir /home/data
-		mount -t nfs knmi-cbsql-w01p.knmi.nl:/knmi_acq /home/data
+		mount -t nfs servername:/knmi_acq /home/data
 	fi
 	# nfs share $nfs_path folder checking
 	if [ ! -e "/home/data/${project}" ] # project folder present
