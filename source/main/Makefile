@@ -3,11 +3,8 @@ CC=g++
 AR=ar rcs
 STRIP=strip -s
 INCLUDE=/usr/local/arm-linux/include/libxml2
-#FREETDSLIB=/usr/lib/arm-linux-gnueabihf/libsybdb.so.5.0.0
 PUGILIB=/usr/lib64/libpugixml.so.1.8
 
-#ncdir=/usr/include/ux/netcdf/
-#INCLUDES=-I $(ncdir)include -I/usr/local/arm-linux/freetds/include
 INCLUDES=/usr/include
 CPPUNITS=nport.cpp nporttcp.cpp nportnc.cpp queue_thread.cpp licor.cpp \
 	 	gill.cpp serial.cpp rotor.cpp movavg.cpp \
@@ -33,7 +30,6 @@ all: $(NAME)
 
 nportraw: $(NAME).cpp
 		$(CC) -I $(INCLUDE) $(CCFLAGS) $(CPPUNITS) -o $(NAME) $(NAME).cpp -lpthread -lnetcdf $(PUGILIB)
-#		$(CC) -I $(INCLUDE) $(CCFLAGS) $(CPPUNITS) $(INCLUDES) -o $(NAME) $(NAME).cpp -lpthread -lnetcdf $(PUGILIB) $(FREETDSLIB)
 
 #	./upload.sh
 #	mv nportraw /home/moxa/bin/nportraw
