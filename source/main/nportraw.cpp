@@ -4,7 +4,7 @@
  * a consumer will process complete device strings,
  * optional saving to netcdf file (auto node in xml),
  * all app parameters are loaded from a project xml source (see xml example)
- * 
+ *
  * done:
  * app argument to create the next nc file, enabling quick file switch
  * prevents data loss when a large runlength (> 43200s) is used
@@ -15,7 +15,7 @@
  */
 
 #define		rotorstatus 0  // only when a rotor is present in EB field app
-#define		withmysql 0		
+#define		withmysql 0
 
 #include	"nport.h"
 #include	"nporttcp.h"
@@ -27,7 +27,7 @@
 #endif
 
 #ifdef withmysql == 1
-#include	"mssql.h"
+//#include	"mssql.h"
 #endif
 
 int priority=-19; // -20 is highest priority and 19 lowest, higher value nice for other processes
@@ -39,11 +39,12 @@ int	main(int argc, char *argv[])
 	//if (opendb() == 1);
 
 	pid = getpid();
-	int rc = setpriority(PRIO_PROCESS, pid, priority);
+/*	int rc = setpriority(PRIO_PROCESS, pid, priority);
 	if (rc != 0){
 		tolog("ERROR setpriority\0", LOG_ERR);
 		return -1;
-	}	 
+	}
+*/	
 	if (argc == 1){
 		dbg_printf("a project xml argument is needed!\n");
 		return -1;
@@ -59,8 +60,8 @@ int	main(int argc, char *argv[])
 	//	status_xml(proj.xml_status_file.c_str());
 
 	init_nc_info();  // initialize the netcdf file pointing
-	
-	// create an empty skeleton for the next netcdf file, 
+
+	// create an empty skeleton for the next netcdf file,
 	// this saves startup time during next run
 	// must be executed in a crontask some time before the next run is started
 	// assumes xml project parameters are already loaded
@@ -82,13 +83,13 @@ int	main(int argc, char *argv[])
 		// daemonize this process, temporarely out commented
 		pid_t pid, sid;
 		// Fork the Parent Process
-		pid = fork();	
+		pid = fork();
 		if (pid < 0) { exit(EXIT_FAILURE); }
 		if (pid > 0) { exit(EXIT_SUCCESS); }
 		umask(0);
 		// Create a new Signature Id for our child
 		sid = setsid();
-		if (sid < 0) { exit(EXIT_FAILURE); }	
+		if (sid < 0) { exit(EXIT_FAILURE); }
 		if ((chdir("/")) < 0) {
 			    exit(EXIT_FAILURE);
 		}
@@ -120,7 +121,7 @@ int	main(int argc, char *argv[])
 //			return -1;
 //	}
 #endif
-	
+
 	void		*ret;
 	struct tcp_server_info	*tcp;
 	tolog("Starting the program !",LOG_INFO);

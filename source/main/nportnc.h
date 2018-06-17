@@ -3,7 +3,7 @@
  *
  *  Fri September 23 12:44:01 2016
  *  Copyright  2016  KNMI, Cor van Oort
- *  
+ *
  ****************************************************************************/
 /*
  * Copyright (C) 2016  KNMI
@@ -12,12 +12,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with main.c; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -36,7 +36,7 @@
 
 // strategy of having 2 netcdf files open to deal with lagging device data
 // a file can be closed when all devices have entered the next file interval
-// the next file must be opened as soon as a device has entered the next file interval  
+// the next file must be opened as soon as a device has entered the next file interval
 typedef struct file_info{
 	int ncid;				// file handle from netcdf
 	bool open;          	// is file open
@@ -96,7 +96,7 @@ struct nc_info{
 	struct Tnc_attribint run, runlength;
 	// dimensions
 	struct Tnc_dim dim_1s, dim_12s, dim_30s, dim_60s, dim_01s;
-	// local variables	
+	// local variables
 	int ncid;			// netcdf file handle
 	int retval;
 	struct file_info ninfo[2];

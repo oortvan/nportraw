@@ -12,7 +12,7 @@
 #include <stdio.h> /* sscanf */
 #include <ctype.h> /* isdigit */
 #include <stddef.h> /* int */
-#include "../nportcdf-turb-v1.0/nport.h"
+#include "../main/nport.h"
 
 // std c++
 #include <vector>

@@ -3,7 +3,7 @@
  *
  *  Fri September 23 08:20:42 2016
  *  Copyright  2016  KNMI
- *  
+ *
  ****************************************************************************/
 /*
  * Copyright (C) 2016  KNMI
@@ -12,12 +12,12 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with main.c; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -46,7 +46,7 @@
 #define dbg_printf(x...)
 #endif
 
-#define DEBUGNC_ON
+//#define DEBUGNC_ON
 #ifdef DEBUGNC_ON
 #define dbgnc_printf(x...)	printf(x)
 #else
@@ -99,7 +99,7 @@
 #define rotor_delta 300
 
 #include	<stdio.h>
-#include	<stdlib.h>
+//#include	<stdlib.h>
 #include	<fcntl.h>
 #include	<errno.h>
 #include	<unistd.h>
@@ -130,7 +130,8 @@
 #include	<semaphore.h>
 
 // application modules
-#include	"/usr/include/pugixml.hpp"
+//#include	"/usr/include/pugixml.hpp"
+#include	"pugixml.hpp"
 #include	"movavg.h"
 //#include	"statusthread.h"
 #include	"gill.h"
@@ -163,15 +164,15 @@ typedef struct signal_info{
 	int is_status, stat_mail;
 	char c_status;
 	sfie *fie;
-};	
+};
 
 typedef std::vector<signal_info> sigs_container;
 
 //struct project_info;
 struct project_info{
-	std::string	name, longname, shortname, localpath, location, format, 
-				affiliation, ftp, version, smtp, receipients, pi, url, 
-				measured_quantities, devs, xml_status_file; 
+	std::string	name, longname, shortname, localpath, location, format,
+				affiliation, ftp, version, smtp, receipients, pi, url,
+				measured_quantities, devs, xml_status_file;
 	float longitude, latitude, altitude;
 	int runlength, linecnt;
 	long curr_flenmin;
@@ -186,15 +187,15 @@ struct project_info{
 	time_t tstamp; //current date and time in UTC
 	struct tm *local;
 	std::string fname;  // current filename
-	int uploaded, 
-		uploaded_cnt, 
-		upload_interval;  // every upload_interval seconds 
+	int uploaded,
+		uploaded_cnt,
+		upload_interval;  // every upload_interval seconds
 	int nodb_stat;
 	bool make_empty_container;
 	// pointer to a WebSocket object, accessible by all threads
 	// init NULL will be created when needed by *.xml
-	wsptr	wsock; 
-};	
+	wsptr	wsock;
+};
 
 struct buffer_struct {
 	char		buffer[BUF_LEN];
@@ -206,10 +207,10 @@ struct comintf {
 	int baud;
 	int sb;
 	int dbits;
-	std::string control; 
+	std::string control;
 	std::string intf;
 	std::string parity;
-};	
+};
 
 struct tcp_server_info {
 	// TCP information
@@ -227,10 +228,10 @@ struct tcp_server_info {
 	char			stype;		// M or X
 	std::string		type,
 					comment;	// more explainable text
-	
+
 	unsigned char	lc;			// location code
-	
-	// buffer 
+
+	// buffer
 	struct buffer_struct	*txbuf, *rxbuf, *msgbuf;
 	struct sockaddr_in	des;
 	bool ready;
@@ -249,7 +250,7 @@ struct tcp_server_info {
 	float freq;  // sample frequency
 	int dt;      // interval between samples
 	int usec_div;// divider to round usecs in timeval, used with indexing
-	
+
 	int sync_cnt, last_cindex; // used in sync with time to index
 	int dim;	  				// dimension length
 	int webclient;				// when 1 send data to websocket(s)
@@ -261,7 +262,7 @@ struct tcp_server_info {
 	// pthread file handle
 	pthread_t		pthd;
 	scan_msg		*fscan_msg;
-	r3ptr			gill; // pointer to gill-R3 object, xml driven creation 
+	r3ptr			gill; // pointer to gill-R3 object, xml driven creation
 	liptr			licor;// pointer to LI7500RS object, xml driven creation
 	rotorptr		rotor;// pointer to rotor object, xml driven creation
 };
@@ -272,7 +273,7 @@ typedef struct q_item{
 	std::string* samples;	// pointer to a space seperated string containing signal values
 	tcp_server_info* tcp;	// pointer to device info structure
 	int cindex;				// current index from tstamp
-};	
+};
 
 extern struct project_info proj;
 extern std::list<tcp_server_info*> listofdevs;

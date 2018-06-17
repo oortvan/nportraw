@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+
+<!--  localpath: path to a local drive -->
+<!--  name, version: project indication -->
+<!--  Location: geographical extent -->
+<!--  Runlength: positive integer, length in seconds of a run. Run is closed when, runlength seconds after the start have passed. -->
+<!--  format: string,  netcdf netcdf-4.0 format-->
+<!--  style: string, file|dayfile|archived -->
+<!--  file uses the runlength setting, dayfile file will contain all data of one day -->
+<!--  archived file will contain data of one day and is archived. -->
+<!--  auto: true will create a new run after the previous was completed. -->
+<!--  upload: 0 will send the run result to an ftp server, 2 inhibit upload -->
+<!--  connection to some SQL server where it can find account information. -->
+<!--  CavityScheduler: 1 will open a cavity schedule form where a t0 run starttime can -->
+<!--  be set, only when system is acquiring data a cavity calibration will be -->
+<!--  started 20 seconds before t0. -->
+<!--  SQL: node name of the SQL server where the project description resides -->
+<!--  RSSQL: node name of SQL server where serial (like from SIAM) text strings end up -->
+<!--  ftp: node name of an FTP server for uploading GZIP raw data -->
+<!--  uncpath: node network shared drive notation, used to store raw data -->
+<!--  service: boolean, when 0 system works in dialog mode, 1 system runs as a service in the background -->
+<!--  keeplocal: boolean, only interesting in archived mode, when 1 raw data file will be saved in local folder -->
+<!--  nodb_stat: boolean, inhibits storing status to mssql database: dont use /usr/local/bin/mssql script -->
+<!--  upload_interval: interval between successive upload to remote server -->
+
+<project>
+<localpath>/usr/people/oortvan/data</localpath>
+<pname>CABSURF</pname>
+<shortname>cabsurf</shortname>
+<longname>Cabauw surface waarnemingen</longname>
+<measured_quantities>datetime,air-soil-temperature,groundwaterlevel,soilfluxes,scintillo</measured_quantities>
+<version>V1.0</version>
+<location>CABAUW - CESAR observatory, the Netherlands</location>
+<affiliation>KNMI - Royal Netherlands Meteorological Institute</affiliation>
+<longitude>4.92619</longitude>
+<latitude>51.97027</latitude>
+<altitude>1.8</altitude>
+<PI>Fred Bosveld(fred.bosveld@knmi.nl)</PI>
+<url>http://projects.knmi.nl/cabauw/insitu/index2.htm</url>
+<RunLength>86400</RunLength>
+<upload_interval>600</upload_interval>
+<format>cdf</format>
+<style>archived</style>
+<auto>1</auto>
+<upload>0</upload>
+<ftp>knmi-cbmb-w01p.knmi.nl</ftp>
+<smtp>smtp.knmi.nl</smtp>
+<recp>oortvan@knmi.nl,oortvan@ziggo.nl</recp>
+<devs>psychrometer, pyrometer, fluxmeter, temp, precipitation</devs>
+<xml_status_file>/var/www/html/status.xml</xml_status_file>
+<nodb_stat>1</nodb_stat>
+
+<!--  Data source names in the project, sources like siam, sonic anemometer, microstar DAP -->
+<!--  Gnumber: gives the number of data sources (groups) that form this project -->
+<!--  G0 .. G[Gnumber-1]: the group name of of each data source, these names point -->
+<!--  to sections -->
+
+<!--  Within each datasource several parameters are initialized -->
+<!--  in a data source section, this description is valid for all data source sections -->
+<!--  all the parameters are stated in one line using -->
+<!--  parm_0=value parm_1=value  ...parm_n=value -->
+
+<!--  Snumber: number of signals that form this  -->
+<!--  type: type name for the data source -->
+<!--  server: raw data source COM | \\Node\DAP0..n -->
+<!--  port: Serial port device name COM1..n -->
+<!--  baud, parity, dbits, sb: settings for port -->
+<!--  freq: samplerate of the data source -->
+<!--  ADS_min, ADS_max: mapping ad boundaries -->
+<!--  Missing_value: used when data source provides corrupted data -->
+<!--  S0..S[Snumber]: seperate signal properties -->
+<!--  name: signal name -->
+<!--  ADHard: channel number in the data source -->
+<!--  AD_Mode: see section member type -->
+<!--  units: fysical units of this signal -->
+<!--  AD_min, AD_max, Range_min, Range_max: Mapping coefficients, integer to float -->
+<!--  Degree: mapping degree -->
+<!--  InStrum: Serial number instrument -->
+<!--  Coef_3: calibration factor, used in after processing -->
+<!--  Coef_4: calibration factor, used in after processing -->
+<!--  Function: function name that is applied to the signal during acquiring, only used in HF cavity project  -->
+<!--  funits: units that go along with Function -->
+
+<!--
+<devices>
+<SIAM>
+<name>WEBSOCK</name>
+<server>IP</server>
+<ip>0.0.0.0</ip>
+<port>667</port>
+<tx>0</tx>
+<TS>X</TS>
+<LC>0x00</LC>
+<Snumber>7</Snumber>
+<type>WEBSOCK</type>
+<cport>COM25</cport>
+<baud>1200</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.08333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<comment>enable websocket server capabillity</comment>
+<altitude>1.8</altitude>
+<no_write>1</no_write>
+<signals>
+<signal><p>0</p><name>TIME_S</name><ADHard>0</ADHard><AD_Mode>T</AD_Mode><units>s</units><AD_min>0</AD_min><AD_max>86400</AD_max><Range_min>0</Range_min><Range_max>86400</Range_max><Degree>1</Degree><Instrum>0</Instrum></signal>
+</signals>
+</SIAM>
+-->
+<!--  RAIN SIAM -->
+<SIAM>
+<ip>145.23.96.162</ip>
+<port>955</port>
+<tx>0</tx>
+<TS>X</TS>
+<LC>0xCE</LC>
+<name>RAINE</name>
+<Snumber>12</Snumber>
+<type>NX_SIAM</type>
+<server>IP</server>
+<cport>COM24</cport>
+<baud>1200</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999</Missing_value>
+<comment>engelse put</comment>
+<Missing_value>-999999</Missing_value>
+<altitude>0</altitude>
+<no_write>0</no_write>
+<webclient>0</webclient>
+
+<!--
+example
+X44 NI16ND3FSH68SP91 NI 0 2 0000 0000 3900 0000 2240 3133 00  ND 0 2 0000 0000 //// //// 0288 //// 00  SH h 3 0000 0000 0000 0000 0000 0000 00  SP h 3 0094 0084 0144 0073 0093 0011 00
+mark the 2 spaces between parms
+-->
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_Mode>T</AD_Mode> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>NI_LCST</name> <status>1</status> <mail>1</mail> <ADHard>3</ADHard> <AD_Mode>NI</AD_Mode> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>NI</name> <ADHard>5</ADHard> <AD_Mode>NI</AD_Mode> <units>Enot/1000</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>NI_60S</name> <ADHard>6</ADHard> <AD_Mode>NI</AD_Mode> <units>Enot/1000</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>ex</Function> <funits></funits></signal>
+<signal> <p>4</p> <name>NI_MAX</name> <ADHard>7</ADHard> <AD_Mode>NI</AD_Mode> <units>Enot/1000</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>5</p> <name>NI_MIN</name> <ADHard>8</ADHard> <AD_Mode>NI</AD_Mode> <units>Enot/1000</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>6</p> <name>NI_600S</name> <ADHard>9</ADHard> <AD_Mode>NI</AD_Mode> <units>Enot/1000</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>7</p> <name>NI_STD</name> <ADHard>10</ADHard> <AD_Mode>NI</AD_Mode> <units>Enot/1000</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>8</p> <name>ND_LCST</name> <status>1</status> <mail>1</mail> <ADHard>14</ADHard> <AD_Mode>ND</AD_Mode> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>9</p> <name>ND_12S</name> <ADHard>16</ADHard> <AD_Mode>ND</AD_Mode> <units>s</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>10</p> <name>ND_60S</name> <ADHard>17</ADHard> <AD_Mode>ND</AD_Mode> <units>s</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>11</p> <name>ND_600S</name> <ADHard>20</ADHard> <AD_Mode>ND</AD_Mode> <units>s</units> <AD_min>0</AD_min> <AD_max>9999</AD_max> <Range_min>0</Range_min> <Range_max>9.999</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+
+<SIAM>
+<name>PSY_EB</name>
+<ip>145.23.96.162</ip>
+<TS>P</TS>
+<LC>0xD8</LC>
+<port>950</port>
+<tx>0</tx>
+<Snumber>8</Snumber>
+<type>CAB-P</type>
+<server>IP</server>
+<cport>COM19</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>1</freq>
+<dt>1</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<comment>psychrometer at 1, 2 and 3 meter above ground</comment>
+<no_write>0</no_write>
+</webclient>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>PT</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>D1m</name> <ADHard>3</ADHard> <AD_MODE>PT</AD_MODE> <units>°C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>3</p> <name>N1m</name> <ADHard>4</ADHard> <AD_MODE>PT</AD_MODE> <units>°C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>4</p> <name>D2m</name> <ADHard>5</ADHard> <AD_MODE>PT</AD_MODE> <units>°C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>5</p> <name>N2m</name> <ADHard>6</ADHard> <AD_MODE>PT</AD_MODE> <units>°C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>6</p> <name>D4m</name> <ADHard>7</ADHard> <AD_MODE>PT</AD_MODE> <units>°C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>7</p> <name>N4m</name> <ADHard>8</ADHard> <AD_MODE>PT</AD_MODE> <units>°C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABT1</name>
+<ip>145.23.96.166</ip>
+<TS>P</TS>
+<LC>0xDA</LC>
+<port>953</port>
+<tx>0</tx>
+<Snumber>8</Snumber>
+<type>CAB-P</type>
+<server>IP</server>
+<cport>COM38</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodem temperatuur</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>T</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>TSA00</name> <ADHard>3</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>3</p> <name>TSA02</name> <ADHard>4</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>4</p> <name>TSA04</name> <ADHard>5</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>5</p> <name>TSA06</name> <ADHard>6</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>6</p> <name>TSA08</name> <ADHard>7</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>7</p> <name>TSA12</name> <ADHard>8</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABT2</name>
+<ip>145.23.96.166</ip>
+<TS>P</TS>
+<LC>0xDB</LC>
+<port>954</port>
+<tx>0</tx>
+<Snumber>5</Snumber>
+<type>CAB-P</type>
+<server>IP</server>
+<cport>COM39</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodem temperatuur</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>T</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>TSA20</name> <ADHard>3</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>3</p> <name>TSA30</name> <ADHard>4</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>4</p> <name>TSA50</name> <ADHard>5</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABT3</name>
+<ip>145.23.96.166</ip>
+<TS>P</TS>
+<LC>0xDC</LC>
+<port>955</port>
+<tx>0</tx>
+<Snumber>8</Snumber>
+<type>CAB-P</type>
+<server>IP</server>
+<cport>COM40</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodem temperatuur</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>T</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>TSB00</name> <ADHard>3</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>3</p> <name>TSB02</name> <ADHard>4</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>4</p> <name>TSB04</name> <ADHard>5</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>5</p> <name>TSB06</name> <ADHard>6</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>6</p> <name>TSB08</name> <ADHard>7</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>7</p> <name>TSB12</name> <ADHard>8</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABT4</name>
+<ip>145.23.96.166</ip>
+<TS>P</TS>
+<LC>0xDD</LC>
+<port>956</port>
+<tx>0</tx>
+<Snumber>5</Snumber>
+<type>CAB-P</type>
+<server>IP</server>
+<cport>COM41</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodem temperatuur</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>T</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>TSB20</name> <ADHard>3</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>3</p> <name>TSB30</name> <ADHard>4</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+<signal> <p>4</p> <name>TSB50</name> <ADHard>5</ADHard> <AD_MODE>T</AD_MODE> <units>&#176;C</units> <AD_min>-24000</AD_min> <AD_max>40000</AD_max> <Range_min>-24</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>py</Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABSFZZ</name>
+<ip>145.23.96.166</ip>
+<TS>F</TS>
+<LC>0xDA</LC>
+<port>958</port>
+<tx>0</tx>
+<Snumber>8</Snumber>
+<type>CAB-F</type>
+<server>IP</server>
+<cport>COM43</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodemwarmteflux</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>T</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>SFZZ05_FL</name> <ADHard>3</ADHard> <AD_MODE>T</AD_MODE> <units>W/m^2</units> <AD_min>-120</AD_min> <AD_max>120</AD_max> <Range_min>-120</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>SFZZ05_EF</name> <ADHard>4</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>4</p> <name>SFZZ05_ES</name> <ADHard>5</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>5</p> <name>SFZZ10_FL</name> <ADHard>6</ADHard> <AD_MODE>T</AD_MODE> <units>W/m^2</units> <AD_min>-120</AD_min> <AD_max>120</AD_max> <Range_min>-120</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>6</p> <name>SFZZ10_EF</name> <ADHard>7</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>7</p> <name>SFZZ10_ES</name> <ADHard>8</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABSFNW</name>
+<ip>145.23.96.166</ip>
+<TS>F</TS>
+<LC>0xDB</LC>
+<port>959</port>
+<tx>0</tx>
+<Snumber>8</Snumber>
+<type>CAB-F</type>
+<server>COM</server>
+<cport>COM44</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodemwarmteflux</comment>
+<signals>
+<signal> 
+<p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> 
+<Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum>
+</signal>
+<signal> 
+ <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>T</AD_MODE> <units>nu</units> <AD_min>0</AD_min>
+ <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3>
+ <Coef_4></Coef_4> <Function></Function> <funits></funits>
+</signal>
+<signal>
+ <p>2</p> <name>SFNW05_FL</name> <ADHard>3</ADHard> <AD_MODE>T</AD_MODE> <units>W/m^2</units> <AD_min>-120</AD_min> <AD_max>120</AD_max>
+ <Range_min>-120</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>
+ <funits></funits>
+ </signal>
+<signal>
+ <p>3</p> <name>SFNW05_EF</name> <ADHard>4</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max>
+ <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>
+ <funits></funits>
+</signal>
+<signal>
+ <p>4</p> <name>SFNW05_ES</name> <ADHard>5</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max>
+ <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>
+ <funits></funits>
+ </signal>
+<signal>
+ <p>5</p> <name>SFNW10_FL</name> <ADHard>6</ADHard> <AD_MODE>T</AD_MODE> <units>W/m^2</units> <AD_min>-120</AD_min> <AD_max>120</AD_max>
+ <Range_min>-120</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>
+ <funits></funits>
+</signal>
+<signal>
+ <p>6</p> <name>SFNW10_EF</name> <ADHard>7</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max>
+ <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>
+ <funits></funits>
+</signal>
+<signal>
+ <p>7</p> <name>SFNW10_ES</name> <ADHard>8</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max>
+ <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>
+ <funits></funits>
+</signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABSFNO</name>
+<ip>145.23.96.166</ip>
+<TS>F</TS>
+<LC>0xDC</LC>
+<port>960</port>
+<tx>0</tx>
+<Snumber>8</Snumber>
+<type>CAB-F</type>
+<server>IP</server>
+<cport>COM45</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.083333</freq>
+<dt>12</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodemwarmteflux</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>T</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>SFNO05_FL</name> <ADHard>3</ADHard> <AD_MODE>T</AD_MODE> <units>W/m^2</units> <AD_min>-120</AD_min> <AD_max>120</AD_max> <Range_min>-120</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>SFNO05_EF</name> <ADHard>4</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>4</p> <name>SFNO05_ES</name> <ADHard>5</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>5</p> <name>SFNO10_FL</name> <ADHard>6</ADHard> <AD_MODE>T</AD_MODE> <units>W/m^2</units> <AD_min>-120</AD_min> <AD_max>120</AD_max> <Range_min>-120</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>6</p> <name>SFNO10_EF</name> <ADHard>7</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>7</p> <name>SFNO10_ES</name> <ADHard>8</ADHard> <AD_MODE>T</AD_MODE> <units>uV/Wm^2</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>TIRRSS</name>
+<ip>145.23.96.166</ip>
+<TS>H</TS>
+<LC>0xD9</LC>
+<port>962</port>
+<tx>0</tx>
+<Snumber>4</Snumber>
+<type>CAB-H</type>
+<server>IP</server>
+<cport>COM47</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>8</dbits>
+<sb>1</sb>
+<freq>1</freq>
+<dt>1</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>infrared heiman</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>PT</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <Instrum>SIAM_H</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>TIRDA</name> <ADHard>3</ADHard> <AD_MODE>PT</AD_MODE> <units>&#176;C</units> <AD_min>-70</AD_min> <AD_max>40</AD_max> <Range_min>-70</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>THUDA</name> <ADHard>4</ADHard> <AD_MODE>PT</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>60</AD_max> <Range_min>-20</Range_min> <Range_max>60</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>TIR200</name>
+<ip>145.23.96.166</ip>
+<TS>H</TS>
+<LC>0xC0</LC>
+<port>961</port>
+<tx>0</tx>
+<Snumber>4</Snumber>
+<type>CAB-H</type>
+<server>IP</server>
+<cport>COM46</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>8</dbits>
+<sb>1</sb>
+<freq>1</freq>
+<dt>1</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>infrared heiman</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>PT</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree><Instrum>SIAM_H</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>TIRUH</name> <ADHard>3</ADHard> <AD_MODE>PT</AD_MODE> <units>&#176;C</units> <AD_min>-70</AD_min> <AD_max>40</AD_max> <Range_min>-70</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>THUUH</name> <ADHard>4</ADHard> <AD_MODE>PT</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>60</AD_max> <Range_min>-20</Range_min> <Range_max>60</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>TIREBF</name>
+<ip>145.23.96.166</ip>
+<TS>H</TS>
+<LC>0xDA</LC>
+<port>963</port>
+<tx>0</tx>
+<Snumber>4</Snumber>
+<type>CAB-H</type>
+<server>IP</server>
+<cport>COM48</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>8</dbits>
+<sb>1</sb>
+<freq>1</freq>
+<dt>1</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>infrared heiman</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>T</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>LCST</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>PT</AD_MODE> <units>no</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree><Instrum>SIAM_H</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>TIREB</name> <ADHard>3</ADHard> <AD_MODE>PT</AD_MODE> <units>&#176;C</units> <AD_min>-70</AD_min> <AD_max>40</AD_max> <Range_min>-70</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>THUEB</name> <ADHard>4</ADHard> <AD_MODE>PT</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>60</AD_max> <Range_min>-20</Range_min> <Range_max>60</Range_max> <Degree>1</Degree> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABBVL</name>
+<ip>145.23.96.162</ip>
+<TS>M</TS>
+<LC>0x25</LC>
+<port>959</port>
+<tx>0</tx>
+<Snumber>27</Snumber>
+<type>CAB-M</type>
+<server>IP</server>
+<cport>COM28</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.01666666667</freq>
+<dt>60</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodemvocht</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>SM</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+
+<signal> <p>1</p> <name>D45_STAT</name> <status>1</status> <ADHard>4</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>D45_SN</name> <ADHard>5</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>D45_MOIST</name> <ADHard>6</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>4</p> <name>D45_TEMP</name> <ADHard>7</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>5</p> <name>D45_EC</name> <ADHard>8</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>6</p> <name>D190_STAT</name> <status>1</status> <ADHard>11</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>7</p> <name>D190_SN</name> <ADHard>12</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>8</p> <name>D190_MOIST</name> <ADHard>13</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>9</p> <name>D190_TEMP</name> <ADHard>14</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>10</p> <name>D190_EC</name> <ADHard>15</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>11</p> <name>D320_STAT</name> <status>1</status> <ADHard>18</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>12</p> <name>D320_SN</name> <ADHard>19</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>13</p> <name>D320_MOIST</name> <ADHard>20</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>14</p> <name>D320_TEMP</name> <ADHard>21</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>15</p> <name>D320EC</name> <ADHard>22</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>16</p> <name>D400_STAT</name> <status>1</status> <ADHard>25</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>17</p> <name>D400_SN</name> <ADHard>26</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>18</p> <name>D400_MOIST</name> <ADHard>27</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>19</p> <name>D400_TEMP</name> <ADHard>28</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>20</p> <name>D400_EC</name> <ADHard>29</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>21</p> <name>D560_STAT</name> <status>1</status> <ADHard>32</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>22</p> <name>D560_SN</name> <ADHard>33</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>23</p> <name>D560_MOIST</name> <ADHard>34</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>24</p> <name>D560_TEMP</name> <ADHard>35</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>25</p> <name>D560_EC</name> <ADHard>36</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+</signals>
+</SIAM>
+
+<SIAM>
+<name>CABBVR</name>
+<ip>145.23.96.162</ip>
+<TS>M</TS>
+<LC>0x25</LC>
+<port>960</port>
+<tx>0</tx>
+<Snumber>27</Snumber>
+<type>CAB-M</type>
+<server>IP</server>
+<cport>COM29</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.01666666667</freq>
+<dt>60</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>bodemvocht</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>SM</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+
+<signal> <p>1</p> <name>D45_STAT</name> <status>1</status> <ADHard>4</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34465</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>D45_SN</name> <ADHard>5</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>D45_MOIST</name> <ADHard>6</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>4</p> <name>D45_TEMP</name> <ADHard>7</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>5</p> <name>D45_EC</name> <ADHard>8</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34464</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>6</p> <name>D200_STAT</name> <status>1</status> <ADHard>11</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34499</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>7</p> <name>D200_SN</name> <ADHard>12</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>8</p> <name>D200_MOIST</name> <ADHard>13</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>9</p> <name>D200_TEMP</name> <ADHard>14</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>10</p> <name>D200_EC</name> <ADHard>15</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34498</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>11</p> <name>D340_STAT</name> <status>1</status> <ADHard>18</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34501</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>12</p> <name>D340_SN</name> <ADHard>19</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>13</p> <name>D340_MOIST</name> <ADHard>20</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>14</p> <name>D340_TEMP</name> <ADHard>21</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>15</p> <name>D340EC</name> <ADHard>22</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34500</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>16</p> <name>D410_STAT</name> <status>1</status> <ADHard>25</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34503</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>17</p> <name>D410_SN</name> <ADHard>26</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>18</p> <name>D410_MOIST</name> <ADHard>27</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>19</p> <name>D410_TEMP</name> <ADHard>28</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>20</p> <name>D410_EC</name> <ADHard>29</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34502</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+<signal> <p>21</p> <name>D570_STAT</name> <status>1</status> <ADHard>32</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34505</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>22</p> <name>D570_SN</name> <ADHard>33</ADHard> <AD_MODE>SM</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>23</p> <name>D570_MOIST</name> <ADHard>34</ADHard> <AD_MODE>SM</AD_MODE> <units>%</units> <AD_min>0</AD_min> <AD_max>100</AD_max> <Range_min>0</Range_min> <Range_max>100</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>24</p> <name>D570_TEMP</name> <ADHard>35</ADHard> <AD_MODE>SM</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>25</p> <name>D570_EC</name> <ADHard>36</ADHard> <AD_MODE>SM</AD_MODE> <units>S/m</units> <AD_min>0</AD_min> <AD_max>120</AD_max> <Range_min>0</Range_min> <Range_max>120</Range_max> <Degree>1</Degree> <sn>34504</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+
+</signals>
+</SIAM>
+
+<!-- GROUNDWATER LEVELL SIAM, 5 OF 6 SENSORs CONNECTED (other option was using a long connection cable for no 6 RS485) -->
+<SIAM>
+<name>CABGW0</name>
+<ip>145.23.96.175</ip>
+<TS>S</TS>
+<LC>0xE0</LC>
+<port>950</port>
+<tx>0</tx>
+<Snumber>17</Snumber>
+<type>CAB-S</type>
+<server>IP</server>
+<cport>COM2</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.01666666667</freq>
+<dt>60</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>grondwater</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>GW</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+
+<signal> <p>1</p> <name>W2_STAT</name> <status>1</status> <ADHard>4</ADHard> <AD_MODE>GW</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>434045</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>W2_TEMP</name> <ADHard>6</ADHard> <AD_MODE>GW</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>434045</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>W2_P</name> <ADHard>7</ADHard> <AD_MODE>GW</AD_MODE> <units>Pa</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn>434045</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>pheight</Function> <funits>cm</funits></signal>
+
+<signal> <p>4</p> <name>W1_STAT</name> <status>1</status> <ADHard>9</ADHard> <AD_MODE>GW</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>135646</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>5</p> <name>W1_TEMP</name> <ADHard>11</ADHard> <AD_MODE>GW</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>135646</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>6</p> <name>W1_P</name> <ADHard>12</ADHard> <AD_MODE>GW</AD_MODE> <units>Pa</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn>135646</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> Coef_4= <Function>pheight</Function> <funits>cm</funits></signal>
+
+<signal> <p>7</p> <name>SL_STAT</name> <status>1</status> <ADHard>14</ADHard> <AD_MODE>GW</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>434048</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>8</p> <name>SL_TEMP</name> <ADHard>16</ADHard> <AD_MODE>GW</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>434048</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>9</p> <name>SL_P</name> <ADHard>17</ADHard> <AD_MODE>GW</AD_MODE> <units>Pa</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn>434048</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>pheight</Function> <funits>cm</funits></signal>
+
+<signal> <p>10</p> <name>WS_STAT</name> <status>1</status> <ADHard>19</ADHard> <AD_MODE>GW</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>434047</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>11</p> <name>WS_TEMP</name> <ADHard>21</ADHard> <AD_MODE>GW</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>434047</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>12</p> <name>WS_P</name> <ADHard>22</ADHard> <AD_MODE>GW</AD_MODE> <units>Pa</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn>434047</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>pheight</Function> <funits>cm</funits></signal>
+
+<signal> <p>13</p> <name>WN_STAT</name> <status>1</status> <ADHard>24</ADHard> <AD_MODE>GW</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>434049</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>14</p> <name>WN_TEMP</name> <ADHard>26</ADHard> <AD_MODE>GW</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>434049</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>15</p> <name>WN_P</name> <ADHard>27</ADHard> <AD_MODE>GW</AD_MODE> <units>Pa</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn>434049</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>pheight</Function> <funits>cm</funits></signal>
+
+</signals>
+</SIAM>
+
+<!-- GROUNDWATER LEVELL SIAM, 1 OF 6 SENSOR CONNECTED (other option was using a very long connection cable for RS485) -->
+<SIAM>
+<name>CABGW1</name>
+<ip>145.23.96.175</ip>
+<TS>S</TS>
+<LC>0xDA</LC>
+<port>951</port>
+<tx>0</tx>
+<Snumber>5</Snumber>
+<type>CAB-S</type>
+<server>IP</server>
+<cport>COM5</cport>
+<baud>9600</baud>
+<parity>Even</parity>
+<dbits>7</dbits>
+<sb>1</sb>
+<freq>0.01666666667</freq>
+<dt>60</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>grondwater</comment>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>GW</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<signal> <p>1</p> <name>EB_STAT</name> <status>1</status> <ADHard>4</ADHard> <AD_MODE>GW</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn>387165</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>2</p> <name>EB_TEMP</name> <ADHard>6</ADHard> <AD_MODE>GW</AD_MODE> <units>&#176;C</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn>387165</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<signal> <p>3</p> <name>EB_P</name> <ADHard>7</ADHard> <AD_MODE>GW</AD_MODE> <units>Pa</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn>387165</sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>pheight</Function>  <funits>cm</funits></signal>
+</signals>
+</SIAM>
+
+<!--
+SCINTILLOMETER 60m level cabauw 200m mast
+example of data output:
+.STATUS=2;64;24769;70034;17/01/19;10:49:50;212.5;4.861E-02;3.115E-14;1.129E-15;3.334E-14;2.933E-14;3.339E-02;4.202E+01;6.0;17.0;1012;2.2;<CHECK><CR><LF>
+ 1        2  3     4     5        6        7     8         9         10        11        12        13        14        15  16   17   18
+-->
+<SIAM>
+<name>XLAS</name>
+<ip>145.23.96.175</ip>
+<TS>S</TS>
+<LC>0x00</LC>
+<port>952</port>
+<scanfunc>xlas_msg</scanfunc>
+<tx>0</tx>
+<Snumber>18</Snumber>
+<type>MKII</type>
+<server>IP</server>
+<cport>COM53</cport>
+<baud>19200</baud>
+<parity>none</parity>
+<dbits>8</dbits>
+<sb>1</sb>
+<freq>1</freq>
+<dt>1</dt>
+<ADS_min>-32768</ADS_min>
+<ADS_max>32767</ADS_max>
+<Missing_value>-999999</Missing_value>
+<no_write>0</no_write>
+<webclient>0</webclient>
+<comment>scintillometer</comment>
+<disable>0</disable>
+<signals>
+<signal> <p>0</p> <name>TIME_S</name> <ADHard>0</ADHard> <AD_MODE>XL</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>86400</AD_max> <Range_min>0</Range_min> <Range_max>86400</Range_max> <Degree>1</Degree> <Instrum>0</Instrum></signal>
+<!-- commented out not relevant
+<signal> <p>1</p> <name>STATID</name> <status>1</status> <ADHard>1</ADHard> <AD_MODE>XL</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>65535</AD_max> <Range_min>0</Range_min> <Range_max>65535</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+ -->
+<signal> <p>1</p> <name>STATF</name> <ADHard>1</ADHard> <AD_MODE>XL</AD_MODE> <units>bits</units> <AD_min>-20</AD_min> <AD_max>40</AD_max> <Range_min>-20</Range_min> <Range_max>40</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function> <funits></funits></signal>
+<!-- commented out not relevant
+<signal> <p>3</p> <name>RECN</name> <ADHard>3</ADHard> <AD_MODE>XL</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>4</p> <name>RECNN</name> <ADHard>4</ADHard> <AD_MODE>XL</AD_MODE> <units>nu</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>2</p> <name>GPSMINITS</name> <ADHard>5</ADHard> <AD_MODE>XL</AD_MODE> <units>minits/day</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>minits</Function>  <funits></funits></signal>
+ -->
+<signal> <p>2</p> <name>GPSSECS</name> <ADHard>5</ADHard> <AD_MODE>XL</AD_MODE> <units>s</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>xs</Function>  <funits></funits></signal>
+<signal> <p>3</p> <name>DMODV</name> <ADHard>6</ADHard> <AD_MODE>XL</AD_MODE> <units>mV</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>4</p> <name>SDMODV</name> <ADHard>7</ADHard> <AD_MODE>XL</AD_MODE> <units>mV</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>5</p> <name>CN2</name> <ADHard>8</ADHard> <AD_MODE>XL</AD_MODE> <units>m^(-2/3)*1.0E13</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>cn</Function>  <funits></funits></signal>
+<signal> <p>6</p> <name>CN2DEV</name> <ADHard>9</ADHard> <AD_MODE>XL</AD_MODE> <units>m^(-2/3)*1.0E13</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>cn</Function>  <funits></funits></signal>
+<signal> <p>7</p> <name>CN2MAX</name> <ADHard>10</ADHard> <AD_MODE>XL</AD_MODE> <units>m^(-2/3)*1.0E13</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>cn</Function>  <funits></funits></signal>
+<signal> <p>8</p> <name>CN2MIN</name> <ADHard>11</ADHard> <AD_MODE>XL</AD_MODE> <units>m^(-2/3)*1.0E13</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function>cn</Function>  <funits></funits></signal>
+<!-- commented out signals not relevant for acquisition
+<signal> <p>13</p> <name>CT</name> <ADHard>12</ADHard> <AD_MODE>XL</AD_MODE> <units>?</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>14</p> <name>HFREE</name> <ADHard>13</ADHard> <AD_MODE>XL</AD_MODE> <units>?</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>15</p> <name>TEXT</name> <ADHard>14</ADHard> <AD_MODE>XL</AD_MODE> <units>&#176;C</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>16</p> <name>TINT</name> <ADHard>15</ADHard> <AD_MODE>XL</AD_MODE> <units>&#176;C</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>17</p> <name>P</name> <ADHard>16</ADHard> <AD_MODE>XL</AD_MODE> <units>hPa</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+<signal> <p>18</p> <name>FF</name> <ADHard>17</ADHard> <AD_MODE>XL</AD_MODE> <units>m/s</units> <AD_min>0</AD_min> <AD_max>20000</AD_max> <Range_min>0</Range_min> <Range_max>20000</Range_max> <Degree>1</Degree> <sn></sn> <Instrum>0</Instrum> <Coef_3></Coef_3> <Coef_4></Coef_4> <Function></Function>  <funits></funits></signal>
+ -->
+</signals>
+</SIAM>
+</devices>
+</project>

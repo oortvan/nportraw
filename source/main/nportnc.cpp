@@ -4,12 +4,12 @@
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with main.c; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -27,7 +27,7 @@ void nc_derr(const char* funcn, int e, const char* xetra, int dimsize){
 	char str[150];
 	sprintf(str,"%s, %s size %d (%s)",nc_strerror(e), xetra, dimsize, funcn);
 	tolog(str, LOG_ERR);
-}	
+}
 
 int nc_add_global_devices(){
 	/*
@@ -46,17 +46,17 @@ int nc_add_global_devices(){
 			dev_glb.value = adev->comment.c_str();
 			if (nc_put_att_text (nc.ncid, NC_GLOBAL, dev_glb.name.c_str(), strlen(dev_glb.value.c_str()), dev_glb.value.c_str())) ERR(nc.retval);
 			i++;
-		}	
+		}
 		lt++;
-	}	
-}	
+	}
+}
 
 int nc_set_global_attribs(){
 	div_t days;
 
 	days  = div(proj.tstamp,86400);  // get the current day time in seconds as remainder
-	nc.date.value = static_cast<long int>(proj.tstamp) - days.rem; 
-	nc.stop.value = nc.date.value + 86400; 
+	nc.date.value = static_cast<long int>(proj.tstamp) - days.rem;
+	nc.stop.value = nc.date.value + 86400;
 
 	nc.experiment.name = "EXPERIMENT";
 	nc.experiment.value = proj.name;
@@ -89,7 +89,7 @@ int nc_set_global_attribs(){
 	nc.pi.value = proj.pi.c_str();
 
 	// now the attributes to the file, to make it useble for EAS runlook
-	if (nc_put_att_text (nc.ncid, NC_GLOBAL, nc.experiment.name.c_str(), strlen(nc.experiment.value.c_str()), nc.experiment.value.c_str())) ERR(nc.retval);	
+	if (nc_put_att_text (nc.ncid, NC_GLOBAL, nc.experiment.name.c_str(), strlen(nc.experiment.value.c_str()), nc.experiment.value.c_str())) ERR(nc.retval);
 	if (nc_put_att_text (nc.ncid, NC_GLOBAL, nc.source.name.c_str(), strlen(nc.source.value.c_str()), nc.source.value.c_str())) ERR(nc.retval);
 	if (nc_put_att_long (nc.ncid, NC_GLOBAL, nc.date.name.c_str(), NC_LONG, 1, &nc.date.value)) ERR(nc.retval);
 	if (nc_put_att_long (nc.ncid, NC_GLOBAL, nc.stop.name.c_str(), NC_LONG, 1, &nc.stop.value)) ERR(nc.retval);
@@ -99,7 +99,7 @@ int nc_set_global_attribs(){
 	if (nc_put_att_text (nc.ncid, NC_GLOBAL, nc.measured_quantities.name.c_str(), strlen(nc.measured_quantities.value.c_str()), nc.measured_quantities.value.c_str())) ERR(nc.retval);
 	if (nc_put_att_text (nc.ncid, NC_GLOBAL, nc.devs.name.c_str(), strlen(nc.devs.value.c_str()), nc.devs.value.c_str())) ERR(nc.retval);
 	nc_add_global_devices();
-	
+
 	if (nc_put_att_text (nc.ncid, NC_GLOBAL, nc.location.name.c_str(), strlen(nc.location.value.c_str()), nc.location.value.c_str())) ERR(nc.retval);
 	if (nc_put_att_float(nc.ncid, NC_GLOBAL, nc.longitude.name.c_str(), NC_FLOAT, 1, &nc.longitude.value)) ERR(nc.retval);
 	if (nc_put_att_float(nc.ncid, NC_GLOBAL, nc.latitude.name.c_str(), NC_FLOAT, 1, &nc.latitude.value)) ERR(nc.retval);
@@ -127,11 +127,11 @@ int nc_set_dimensions(){
 			// all relevant dimension parameters are produced in nport.cpp xml reading
 			nc.retval = nc_def_dim(nc.ncid, adev->dim_name.c_str(),  adev->dim,  &adim);
 			if (nc.retval) nc_derr("nc_def_dim", nc.retval, adev->dim_name.c_str(), adev->dim);
-		}	
+		}
 		lt++;
-	}	
+	}
 	return nc.retval;
-}	
+}
 
 int nc_set_variables(div_t *sday){
 	struct tcp_server_info	*adev;
@@ -140,29 +140,16 @@ int nc_set_variables(div_t *sday){
 	std::list<tcp_server_info*>::iterator lt = listofdevs.begin();
 	while( lt != listofdevs.end()){
 		adev = (*lt); // get a device structure from list
-		if (adev->no_write == 1) lt++; // when 1 write no data from this device 
-		else{	
+		if (adev->no_write == 1) lt++; // when 1 write no data from this device
+		else{
 			nc.retval = nc_inq_dimid(nc.ncid, adev->dim_name.c_str(), &adim);  //retrieve dim id for this device by name
 			if (nc.retval == 0){ // found a valid dimension for this device
 
 				// some processing for current index of this run
-	/*			if (adev->freq > 1)
-				{
-					secs = div(int(adev->tstamp.tv_sec),proj.runlength);
-					usecs = div(int(adev->tstamp.tv_usec),adev->usec_div); // USECS ROUNDING TO 0.0, 0.1, 0.2, ..., 0.9
-					adev->tstamp.tv_usec = long(usecs.quot)*adev->usec_div;
-					//adev->cindex = int(adev->freq) * secs.rem + usecs.quot; // and the index is, 10Hz means
-					//avar->curpos = adev->cindex;
-					index.quot = int(adev->freq) * secs.rem + usecs.quot; //adev->cindex;
-				}
-				else
-	*/
-				{
-					secs = div(int(adev->tstamp.tv_sec),proj.runlength);
-					inbtw = div(sday->rem, proj.runlength);     // use as in between result to calculate index of < 1Hz
-					index = div(inbtw.rem, adev->dt);	  		// current index in quotient
-				}
-		
+				secs = div(int(adev->tstamp.tv_sec),proj.runlength);
+				inbtw = div(sday->rem, proj.runlength);     // use as in between result to calculate index of < 1Hz
+				index = div(inbtw.rem, adev->dt);	  		// current index in quotient
+
 				// calculate the start and stop times of this file
 				// hier onderscheid maken tussen een lege volgende container maken en actuale container maken.
 				long int astart = adev->tstamp.tv_sec - secs.rem, astop;
@@ -180,9 +167,9 @@ int nc_set_variables(div_t *sday){
 
 					if (nc.retval = nc_def_var(nc.ncid, avar->name.c_str(), NC_FLOAT, 1, &(adim), &(avar->nc_id))) ERR(nc.retval);
 					//nc.retval = nc_def_var(nc.ncid, avar->name.c_str(), NC_SHORT, 1, &(adim), &(avar->nc_id));
-					if (nc.retval = nc_put_att_long(nc.ncid, avar->nc_id, "RDATE", NC_LONG,   1, &nc.date.value)) ERR(nc.retval); 
+					if (nc.retval = nc_put_att_long(nc.ncid, avar->nc_id, "RDATE", NC_LONG,   1, &nc.date.value)) ERR(nc.retval);
 					if (nc.retval = nc_put_att_long(nc.ncid, avar->nc_id, "START", NC_LONG, 1, &astart)) ERR(nc.retval); // unix time notation
-					if (nc.retval = nc_put_att_long(nc.ncid, avar->nc_id, "STOP",  NC_LONG, 1, &astop)) ERR(nc.retval); 
+					if (nc.retval = nc_put_att_long(nc.ncid, avar->nc_id, "STOP",  NC_LONG, 1, &astop)) ERR(nc.retval);
 
 					if (nc.retval = nc_put_att_text(nc.ncid,  avar->nc_id, "instrum", strlen(avar->instrum.c_str()), avar->instrum.c_str())) ERR(nc.retval);
 					if (nc.retval = nc_put_att_text(nc.ncid,  avar->nc_id, "sn",      strlen(avar->sn.c_str()),      avar->sn.c_str())) ERR(nc.retval);
@@ -200,13 +187,17 @@ int nc_set_variables(div_t *sday){
 					float adt = 1/static_cast<float>(adev->freq);  // actual must be freq
 					if (nc.retval = nc_put_att_float(nc.ncid, avar->nc_id, "dt",         NC_FLOAT, 1, &adt)) ERR(nc.retval);
 					if (nc.retval = nc_put_att_float(nc.ncid, avar->nc_id, "_FillValue", NC_FLOAT, 1, &adev->missing_value)) ERR(nc.retval);
-			
+
+					//dbgnc_printf("nc_setvars: name: %s, curpos: %d, rdate: %d, rstart: %d, rstop: %d\n",
+					//			avar->name.c_str(), index.quot, nc.date.value, astart, astop);
+
 					avar++;
-				}	
+				}
 				lt++;
 			}
-		}	
-	} // end if select
+		}
+	}
+	//dbgnc_printf("END OF PROJECT SET NC VARIABLES\n");
 	return 0;
 }
 
@@ -229,12 +220,12 @@ int nc_open_variables(div_t *sday){
 				if (nc.retval = nc_inq_varid(nc.ncid,avar->name.c_str(),&(avar->nc_id))) ERR(nc.retval);
 				dbg_printf("%s id:%d\n",avar->name.c_str(),avar->nc_id);
 				avar++;
-			}	
-		}	
+			}
+		}
 		lt++;
 	} // end if select
 	return 0;
-}	
+}
 
 // this function is called by the PRODUCER process when
 // new records are available in   CONSUMER process
@@ -251,7 +242,7 @@ void nc_write_signals(struct q_item *qui, int index){
 	// write them to their own netcdf variable, is present when (sp==fp)
 	//dbg_printf("\nrounded gill index: %d, %d, %s", index, qui->tcp->cindex, qui->samples->c_str());
 	//return;
-	
+
 	sigs_container::iterator avar = qui->tcp->signals.begin();
 	phpmsg[0] = 0;
 
@@ -279,7 +270,7 @@ void nc_write_signals(struct q_item *qui, int index){
 						qui->tcp->last_tstamp = afloat; // last current time in seconds remembered
 						//std::cout << "\nindex: " << afloat;
 						//dbg_printf("\ntime: %d, %d, %d, %f",qui->cindex, qui->tstamp->tv_sec % 86400, qui->tstamp->tv_usec, afloat);
-					}	
+					}
 					else if (avar->is_status == 1){ 		   // test if its status and
 						try{
 							afloat = static_cast<float>(token[0]); // status is in ASCII
@@ -287,16 +278,16 @@ void nc_write_signals(struct q_item *qui, int index){
 						catch(...){
 							afloat = 0;
 							dbg_printf("\n%s status %f",avar->name.c_str(), afloat);
-						}	
+						}
 						avar->c_status = token[0];  // remember last status
-					}	
+					}
 					else if (avar->fie != NULL) afloat = avar->fie(token); // is some special function assigned to this signal
 					else try{
 						afloat = atof(token);
 					}
 					catch(...){
 						afloat = 0;
-					}	
+					}
 					if (avar->curpos < qui->tcp->dim){
 						if (qui->tcp->nc_file != NULL)
 						if (qui->tcp->nc_file->ncid != -1)
@@ -309,7 +300,7 @@ void nc_write_signals(struct q_item *qui, int index){
 							 * then when |afloat - lastvalue| > delta_max
 							 * assign lastvalue to afloat else assign afloat to lastvalue
 							 * A form of despiking the data is obtained
-							 */ 
+							 */
 //#ifdef despike == 1
 							if (avar->delta_max != -1){ // keep some data ok
 								if (avar->lastvalue != -999){
@@ -319,28 +310,28 @@ void nc_write_signals(struct q_item *qui, int index){
 											spike = 1;
 											//printf("DELTA_MAX ERROR %s: %f, %f\n", avar->sname.c_str(), afloat, avar->lastvalue);
 										}
-										else avar->lastvalue = afloat;	
+										else avar->lastvalue = afloat;
 									}
 									catch(...){
 										afloat = -999999; //std::numeric_limits<float>::quiet_NaN();
-									}	
+									}
 								}
 								else avar->lastvalue = afloat;  // assumes first value is OK
 							}
-//#endif						
+//#endif
 							if (nc.retval = nc_put_var1_float(qui->tcp->nc_file->ncid, avar->nc_id, avar->index, &afloat)) ERR(nc.retval);
 
 							// mark device activity
-							gettimeofday(&qui->tcp->nc_file->last_used, NULL);				
+							gettimeofday(&qui->tcp->nc_file->last_used, NULL);
 						}
 #ifdef phpline == 1		// php approach to show device data
-						//if (phpmsg[0] != 0)	sprintf(phpmsg,"%s,%f",phpmsg,afloat); // append float value to one-liner	
+						//if (phpmsg[0] != 0)	sprintf(phpmsg,"%s,%f",phpmsg,afloat); // append float value to one-liner
 						//else {
 						//	sprintf(phpmsg,"%s%f",phpmsg,afloat);
 						//	fpt = fopen(avar->envname.c_str(),"w");
 						//}
 #endif
-					}	
+					}
 					avar->curpos++;
 					gonext = FALSE;
 					token[0] = 0;
@@ -354,25 +345,25 @@ void nc_write_signals(struct q_item *qui, int index){
 				token[ti] = acopy->c_str()[i];
 				ti++;
 				if (ti > 99) gonext = FALSE;  // max size of token string
-			}	
+			}
 			i++;
-		}	
+		}
 		avar++;
 	}
 	if (spike == 1){
 		spike = 0;
 		tolog(qui->samples->c_str(), LOG_ERR);
 	}
-	
+
 #ifdef phpline == 1
 	//if (phpmsg[0] != 0) { // create one liner, for php ajax
 	//	if (fpt != NULL){
 	//		fputs(phpmsg, fpt);
 	//		fclose(fpt);
-	//	}	
+	//	}
 	//}
-#endif	
-}	
+#endif
+}
 
 void show_devs_pinfos(){
 	struct tcp_server_info	*tcp;
@@ -393,16 +384,16 @@ void nc_path_fname(char *fname, char *path, struct tm *curr){
 	        curr->tm_hour,curr->tm_min);
 
 	sprintf(path,"%s/%s/%4d/%02d/%02d",
-	        proj.localpath.c_str(),proj.name.c_str(), 
+	        proj.localpath.c_str(),proj.name.c_str(),
 		    curr->tm_year+1900,curr->tm_mon+1,curr->tm_mday);
 
 	sprintf(proj.ncpath,"%s/%s.%s",path,fname,proj.format.c_str()); // complete path to netcdf file
 
-}	
+}
 
 int init_nc_info(){
 	nc.finfo.clear();
-	
+
 	nc.ninfo[0].ncid = -1;
 	nc.ninfo[0].dayindex = -1;
 	nc.ninfo[0].fname = "";
@@ -416,7 +407,7 @@ int init_nc_info(){
 
 	return 1;
 }
-	
+
 int nc_new_pfile(struct tcp_server_info *dev, div_t *indexing, pfile_info new_finfo, struct timeval *latest){
 	char path[100],fname[50];
 	struct tm *curr;
@@ -449,16 +440,16 @@ int nc_new_pfile(struct tcp_server_info *dev, div_t *indexing, pfile_info new_fi
 
 void nc_dangling(struct timeval *latest){
 // moet dit aan de sample snelheid van het device gekoppeld zijn?
-	for (int i=0; i>2; i++) 
+	for (int i=0; i>2; i++)
 	if (nc.ninfo[i].open){
-		if ((latest->tv_sec - nc.ninfo[i].last_used.tv_sec) > 5){ // means atleast 5 seconds before starting a new file data from the device stopped 
+		if ((latest->tv_sec - nc.ninfo[i].last_used.tv_sec) > 5){ // means atleast 5 seconds before starting a new file data from the device stopped
 				nc.ninfo[i].ncid = -1;
 				nc.ninfo[i].dayindex = -1;
 				nc.ninfo[i].open = FALSE;
 				nc.ninfo[i].devcnt = 0;
-		}	
-	}	
-}	
+		}
+	}
+}
 
 int assign_dev_ncfptr(struct timeval *tstamp, struct tcp_server_info *dev){
 	// new approach: give every device a netcdf file handle pointer
@@ -467,30 +458,30 @@ int assign_dev_ncfptr(struct timeval *tstamp, struct tcp_server_info *dev){
 	if (tstamp->tv_sec == -1) return -1;
 
 	div_t indexing = div(tstamp->tv_sec, 86400);  // the remainder delivers the second of the day
-	indexing = div(indexing.rem, proj.runlength); // quot the nth file of the day, remainder index in current netcdf file for this device 
-	
+	indexing = div(indexing.rem, proj.runlength); // quot the nth file of the day, remainder index in current netcdf file for this device
+
 	time_t now = dev->tstamp.tv_sec - indexing.rem;
 	dev->curr = gmtime(&now); // get the julian day, day crossing detectection
 	//dbgnc_printf("%s:%s:%d\n", dev->type.c_str(), dev->src.c_str(), dev->curr->tm_yday);
 	if (dev->julday == -1) dev->julday = dev->curr->tm_yday; // init julday for day crossing
 
 	// in case of day file (runlength=86400) indexing.quot will be 0 or 1,
-	// this is only true for devs with sfreq >= 1Hz. 
+	// this is only true for devs with sfreq >= 1Hz.
 	// Slower devs will always show indexing.quot = 0
 	if (dev->dayindex == indexing.quot){
-		if (dev->julday == dev->curr->tm_yday)	
+		if (dev->julday == dev->curr->tm_yday)
 			return 1;
 	}
 
 	dev->dayindex = indexing.quot;
-	
+
 	dbgnc_printf("\nENTRY %s:%s:%d:%d:%d\n", dev->type.c_str(), dev->src.c_str(), indexing.quot, tstamp->tv_sec, dev->last_used.tv_sec);
 	// entry point testing for file handle
 	timeval latest;
 	latest.tv_sec = tstamp->tv_sec;
 	latest.tv_usec = tstamp->tv_usec;
 	//nc_dangling(&latest);
-	
+
 	if (dev->nc_file == NULL){
 		// no netcdf file handle assigned to this device
 		for (int i=0; i<2; i++){
@@ -500,7 +491,7 @@ int assign_dev_ncfptr(struct timeval *tstamp, struct tcp_server_info *dev){
 				nc.ninfo[i].devcnt++;
 				nc.ninfo[i].last_used.tv_sec = latest.tv_sec;
 				dev->nc_file = &nc.ninfo[i];
-				dbgnc_printf("DEVNULL_ADDED %s TO HANDLE %d:%d:%d:%p\n", 
+				dbgnc_printf("DEVNULL_ADDED %s TO HANDLE %d:%d:%d:%p\n",
 				     dev->src.c_str(), nc.ninfo[i].ncid, nc.ninfo[i].dayindex, nc.ninfo[i].devcnt, dev->nc_file );
 				return nc.ninfo[i].ncid;
 			}
@@ -519,13 +510,13 @@ int assign_dev_ncfptr(struct timeval *tstamp, struct tcp_server_info *dev){
 			dev->nc_file->devcnt--;
 			dbgnc_printf("DECREMENT %s:%p:%d\n",dev->src.c_str(), dev->nc_file, dev->nc_file->devcnt);
 			show_devs_pinfos();
-			if (dev->nc_file->devcnt == 0){ 
+			if (dev->nc_file->devcnt == 0){
 				// all devices are done in this interval
 				if (nc.retval = nc_close(dev->nc_file->ncid)){ // close netcdf
 					ERR(nc.retval);
-					return -1;	
+					return -1;
 				}
-				dbgnc_printf("HANDLE %s:%d CLOSED AND VECTOR[0] DELETED, ALL DEVS TO NEXT INTERVAL\n", 
+				dbgnc_printf("HANDLE %s:%d CLOSED AND VECTOR[0] DELETED, ALL DEVS TO NEXT INTERVAL\n",
 				             dev->src.c_str(), dev->nc_file->ncid);
 				dev->nc_file->ncid = -1;
 				dev->nc_file->dayindex = -1;
@@ -550,14 +541,14 @@ int assign_dev_ncfptr(struct timeval *tstamp, struct tcp_server_info *dev){
 			// thus failing to reach the devcnt 0 boundary
 			if (!nc.ninfo[0].open || ((indexing.quot - nc.ninfo[0].dayindex) >= 2)){
 				return nc_new_pfile(dev, &indexing, &nc.ninfo[0], &latest);
-			}	
+			}
 			if (!nc.ninfo[1].open || ((indexing.quot - nc.ninfo[1].dayindex) >= 2)){
 				return nc_new_pfile(dev, &indexing, &nc.ninfo[1], &latest);
-			}	
+			}
 		}
 	}
 	return -1;
-}	
+}
 
 // create or open the nc file
 int create_open_nc_file(div_t *index, struct tcp_server_info *device){
@@ -566,7 +557,7 @@ int create_open_nc_file(div_t *index, struct tcp_server_info *device){
 	// close this nc file
 	//nc.retval = nc_close(nc.ncid);
 	proj.nc_is_open = FALSE;
-	
+
 	struct tm *curr;
 	// calculate the current index
 	// curr = gmtime(&tcp->tstamp.tv_sec);
@@ -574,8 +565,8 @@ int create_open_nc_file(div_t *index, struct tcp_server_info *device){
 	if (fileexists(proj.ncpath) && (device != NULL)){
 		if (nc.retval = nc_open(proj.ncpath, NC_WRITE|NC_SHARE, &nc.ncid)){
 			ERR(nc.retval)
-			return -1;	
-		}		
+			return -1;
+		}
 		else{
 			proj.nc_is_open = TRUE;
 			nc_open_variables(index); // use index to start registration at current time index
@@ -584,34 +575,36 @@ int create_open_nc_file(div_t *index, struct tcp_server_info *device){
 			//device->nc_file = &nc.finfo[0]; // assign the current file to individual device
 			return nc.ncid;
 		}
-	}	
-	
-	else{  // Create the file. 
+	}
+
+	else{  // Create the file.
 		if ((nc.retval = nc_create(proj.ncpath, NC_SHARE, &nc.ncid)))
 			ERR(nc.retval);
 		proj.nc_is_open = TRUE;
+		dbgnc_printf("\nproject_init: %s\n",proj.ncpath);
 
 		// global attributes
 		if (nc.retval = nc_set_global_attribs())
 			ERR(nc.retval);
-
+			dbgnc_printf("project_init_global_attributes: %s\n",proj.ncpath);
 		// dimensions
 		if (nc.retval = nc_set_dimensions())
 			ERR(nc.retval);
-
+		dbgnc_printf("project_init_set_dimensions: %s\n",proj.ncpath);
 		if (nc.retval = nc_set_variables(index)) // use index to start registration at current time index
 			ERR(nc.retval);
+		dbgnc_printf("project_init_set_variables: %s\n",proj.ncpath);
 
 		// End define mode.
 		if (nc.retval = nc_enddef(nc.ncid)){
 			ERR(nc.retval);
-			return -1;	
-		}		
+			return -1;
+		}
 
 		if (device == NULL){
 			if (nc.retval = nc_close(nc.ncid)) ERR(nc.retval); // precreation of next container
 			return -1;
 		}
 		return nc.ncid;
-	}	
+	}
 }

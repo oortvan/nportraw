@@ -4,12 +4,12 @@
 // modify it under the terms of the GNU Lesser General Public
 // License as published by the Free Software Foundation; either
 // version 2.1 of the License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 // Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public
 // License along with main.c; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -36,7 +36,7 @@ void tolog(const char* amsg, int PRIORITY){
 	openlog("NPORT", 0, LOG_USER);
 	syslog(LOG_USER|PRIORITY, logmsg.c_str());
 	closelog();
-}	
+}
 
 bool fileexists( const char* Filename )
 {
@@ -88,11 +88,11 @@ int mkpath(const char *path, mode_t mode)
 const char * timestr(timeval tstamp){
 	tm* nowtm;
 	char tmbuf[64];
-	
+
 	nowtm = localtime(&tstamp.tv_sec);
 	strftime(tmbuf, sizeof tmbuf, "%Y-%m-%d %H:%M:%S", nowtm);
 	return tmbuf;
-}	
+}
 
 int Getdfp(time_t tcurr, div_t *index, struct tcp_server_info *device){ // attempt to make more general regarding runlength
 	char path[100],fname[50];
@@ -113,12 +113,12 @@ int Getdfp(time_t tcurr, div_t *index, struct tcp_server_info *device){ // attem
 
 		if ((fname == proj.fname.c_str())){ // new file already exists and is open? inhibit doubles
 			return -1;
-		}	
+		}
 		proj.tstamp = tcurr;
 		proj.local = gmtime(&tcurr);  // make it the new start time
-		
+
 		sprintf(path,"%s/%s/%4d/%02d/%02d",
-		       proj.localpath.c_str(),proj.name.c_str(), 
+		       proj.localpath.c_str(),proj.name.c_str(),
 			   curr->tm_year+1900,curr->tm_mon+1,curr->tm_mday);
 
 		mkpath(path, 0777); // look for and create if needed all dirs in path
@@ -135,21 +135,22 @@ int Getdfp(time_t tcurr, div_t *index, struct tcp_server_info *device){ // attem
 		// create a new or open file and return its handle
 		// but only when no handle to the current index exists
 		create_open_nc_file(index, device);
+		dbg_printf("END OF PROJECT_INIT\n");
 		proj.fname = fname;
-	}	
-}	
+	}
+}
 
 int parse_xml(const char* filename){
 	dbg_printf("pugi parsing\n");
-	
+
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(filename);
 
 #ifdef DEBUG_ON
-	std::cout 	<< "Load result: " << result.description()  
+	std::cout 	<< "Load result: " << result.description()
 				<< "\nError offset: " << result.offset << "\n";
 #endif
-}	
+}
 
 int create_next_nc_file(const char* _arg){
 	if (strstr(_arg,"-n") != NULL){
@@ -170,7 +171,7 @@ int create_next_nc_file(const char* _arg){
 	        curr->tm_year+1900,curr->tm_mon+1,curr->tm_mday,
 	        curr->tm_hour,curr->tm_min);//minits);
 		return 0;
-	}	
+	}
 	return -1;
 }
 
@@ -179,12 +180,12 @@ int create_next_nc_file(const char* _arg){
  * is applied. The SIAM type involved are: pressure, temperature, percipitation.
  * This preprocessing depends on the 'Function' element in a signal node of the
  * initialization xml project file, sofar 'ps', 'tx' and 'ex' are possible.
- * 
+ *
  * Pressure signal ranges from 9400..9999, 0000..50 -> 940 .. 1050 hPa, see ps
  * Air temp is given in units of 0.1 C, see tx function
  * Psychrometer temperatuur is in units 0.001 C, see py function
  * Percipitation NI and ND has exponential notation, ABCD -> 0.BCD 10^A see ex.
- */ 
+ */
 
 float ps(char * x){
 	float y = atof(x)*0.1;
@@ -215,9 +216,9 @@ float ex(char * x){
  * Preprocessing of XLAS gps time
  * the time string hh:mm:ss must be converted to minits/day and seconds/minit
  * the string is first converted to unixtime: which is seconds since some date
- * 
+ *
  * Preprocessing CN values, which are very small, with cn function and make bigger
- */  
+ */
 
 float cn(char * x){
 	float y = 1.0E13*atof(x);
@@ -230,12 +231,12 @@ float xs(char * x){
 	float y = mytm.tm_hour*3600+mytm.tm_min*60+mytm.tm_sec;
 	//dbg_printf("\nxs fie: %s, %f",x, y);
 	return y;
-}	
+}
 
 /*
  * hex to float functions
  * mainly used in R3 processing
- * 
+ *
  */
 
 float sf(char * x){
@@ -243,7 +244,7 @@ float sf(char * x){
 	sscanf(x,"%hx", &y);
 	//dbg_printf("\nsf fie: %s, %d",x, y);
 	return float(y);
-}	
+}
 
 /*
  * implementation of itoa
@@ -315,17 +316,17 @@ int nport_json(std::string *webformat){
 		if (adev->webclient == 1){ // use only when indicated in xml
 			*webformat += "}";
 			comma_cnt++;
-		}	
+		}
 	}
 	*webformat += "]}\n";
-}	
+}
 
 /*
  * Load the status xml data static in the program
  * so it is maintainable for input sources
  * ensemble of several fuctions
- * 
- */ 
+ *
+ */
 
 std::string xml_timestr(struct timeval *tstamp){
 	char abuf[30];
@@ -344,13 +345,13 @@ char *datestr(char abuf[]){
 	sprintf(abuf,"%4d-%02d-%02d",
 	       local->tm_year+1900,local->tm_mon+1,local->tm_mday);
 	return abuf;
-}	
+}
 */
 int edit_element(pugi::xml_node &node, std::string name, std::string value){
 	node.remove_child(node.child(name.c_str()));
 	pugi::xml_node running_since = node.append_child(name.c_str());
 	return running_since.append_child(pugi::node_pcdata).set_value(value.c_str());
-}	
+}
 
 int xml_status_update(struct tcp_server_info *tcp, const char* node_name, struct timeval *tstamp){
 	if ( proj.xml_status_file == "" ) return 0;
@@ -373,7 +374,7 @@ int xml_status_update(struct tcp_server_info *tcp, const char* node_name, struct
 		dbgstat_printf("FAILED SAVING STATUS.XML\n");
 	}
 	return sresult;
-}	
+}
 
 int status_xml(const char* filename){
 	pugi::xml_document doc;
@@ -397,32 +398,32 @@ int status_xml(const char* filename){
 	if (sresult == 0){
 		dbgstat_printf("FAILED SAVING STATUS.XML\n");
 	}
-}	
+}
 
-/* 
- * 
+/*
+ *
  * Load and initialize project parameters from a xml formatted ascii file.
  * Several structures all filled with values:
- * 
+ *
  * - Common project parameters
  * - Device parameters, devices are scanned using tcp socket (IP, PORT or Serial intf)
- * - Signals are part of a device and describe how to process a device message 
- * 
- * 
- */ 
+ * - Signals are part of a device and describe how to process a device message
+ *
+ *
+ */
 
 int read_nc_xml(const char* filename){
 	std::string afie;
 	tcp_server_info* p_tcp_info;
-	pugi::xml_document doc; // create the pugi xml class 
+	pugi::xml_document doc; // create the pugi xml class
 	pugi::xml_parse_result result = doc.load_file(filename);  // load the xml project file
 	if (result == 0){
-#ifdef DEBUG_ON		
-		std::cout 	<< "Load result: " << result.description()  
+#ifdef DEBUG_ON
+		std::cout 	<< "Load result: " << result.description()
 					<< "\nError offset: " << result.offset << "\n";
 #endif
 		return result;
-	}	
+	}
 	pugi::xml_node project = doc.document_element();  // get the root element, contains cdf main attributes
 	pugi::xml_node devices = project.child("devices");
 
@@ -468,7 +469,7 @@ int read_nc_xml(const char* filename){
 	proj.wsock = NULL;
 
 	dbg_printf("*** PROJECT ***\n%s, %s,  %s, %s, %s, %s, %s, %s, %s\n",
-			project.child_value("pname"), 
+			project.child_value("pname"),
 			project.child_value("location"),
 			project.child_value("version"),
 			project.child_value("localpath"),
@@ -499,37 +500,37 @@ int read_nc_xml(const char* filename){
 			p_tcp_info->server = siam.child_value("server");
 			if (p_tcp_info->server == "COM"){  // using serial interface -> create its enviroment
 				p_tcp_info->comport = new comintf;
-				p_tcp_info->comport->intf = siam.child_value("intf");	
+				p_tcp_info->comport->intf = siam.child_value("intf");
 				p_tcp_info->comport->control = siam.child_value("control");
 				p_tcp_info->comport->parity = siam.child_value("parity");
-				p_tcp_info->comport->cport = atoi(siam.child_value("cport"));	
-				p_tcp_info->comport->baud = atoi(siam.child_value("baud"));	
-				p_tcp_info->comport->dbits = atoi(siam.child_value("dbits"));	
+				p_tcp_info->comport->cport = atoi(siam.child_value("cport"));
+				p_tcp_info->comport->baud = atoi(siam.child_value("baud"));
+				p_tcp_info->comport->dbits = atoi(siam.child_value("dbits"));
 				p_tcp_info->comport->sb = atoi(siam.child_value("sb"));
 				dbg_printf("\n%s, %s, %s, %d, %d, %d, %d\n",
            			p_tcp_info->comport->intf.c_str(),
            			p_tcp_info->comport->control.c_str(),
            			p_tcp_info->comport->parity.c_str(),
-           			p_tcp_info->comport->baud, 
-           			p_tcp_info->comport->cport, 
+           			p_tcp_info->comport->baud,
+           			p_tcp_info->comport->cport,
            			p_tcp_info->comport->dbits,
            			p_tcp_info->comport->sb);
-			}	
+			}
 			p_tcp_info->ready = false; // will be enabled in the process loop
 			p_tcp_info->ip = siam.child_value("ip");
 			p_tcp_info->tcpport = atoi(siam.child_value("port"));
 			p_tcp_info->tx = atoi(siam.child_value("tx"));  // must socket writefs be used
 			p_tcp_info->src = siam.child_value("name");
-			
+
 			p_tcp_info->stype = siam.child_value("TS")[0];
 			p_tcp_info->type = siam.child_value("type");   // used for status event reporting and websock creation
 
-				
+
 			if (p_tcp_info->type == "WEBSOCK")
 			if (!proj.wsock) // only one websocket permitted, proj.wsock set NULL for project during proj init
 				proj.wsock = new WebSocket(); // create a websock object, that is visible from every thread
 			ws_printf("WEBSOCKET %p\n", proj.wsock);
-			
+
 			p_tcp_info->comment = siam.child_value("comment");   // used for status event reporting
 			sscanf(siam.child_value("LC"),"%hhx",&p_tcp_info->lc);
 			p_tcp_info->tcpfd = 0;
@@ -561,14 +562,14 @@ int read_nc_xml(const char* filename){
 
 			// is this device a potential websocket client
 			p_tcp_info->webclient = atoi(siam.child_value("webclient"));
-			
+
 			// next two items are depreciated
 			p_tcp_info->ad_min = atof(siam.child_value("ADS_min"));
 			p_tcp_info->ad_max = atof(siam.child_value("ADS_max"));
 
 			if (siam.child_value("Missing_value") == std::string("nan"))
-				 p_tcp_info->missing_value = 0.0/0.0; 
-			else p_tcp_info->missing_value = atof(siam.child_value("Missing_value")); 
+				 p_tcp_info->missing_value = 0.0/0.0;
+			else p_tcp_info->missing_value = atof(siam.child_value("Missing_value"));
 
 			// not all messages come from siams, read from xml what kind of source is out there
 			p_tcp_info->last_cindex = -1;
@@ -585,7 +586,7 @@ int read_nc_xml(const char* filename){
 					p_tcp_info->gill->scan_for_rotor();
 				}
 				p_tcp_info->gill->debug = (siam.child_value("debug") == std::string("true"));
-			}	
+			}
 			else if (afie == "licor_msg") {
 				dbg_printf("****************CHECKING FOR LICOR*****************\n");
 				p_tcp_info->licor = new tlicor_7500();	 // create a licor class object
@@ -595,15 +596,15 @@ int read_nc_xml(const char* filename){
 				if (p_tcp_info->licor->haspipe > -1) // use the pipe for intercommunication?
 					lipipe = p_tcp_info->licor->fd[1];
 				else lipipe = -1;
-			}	
+			}
 			else if (afie == "pt_msg"){   // is a pt rotor present in this project
 				p_tcp_info->rotor = new rotor();
 				p_tcp_info->rotor->self = p_tcp_info;  // device pointer inside the rotor class
 				p_tcp_info->fscan_msg = &scan_rotor_msg;
-			}	
+			}
 			gettimeofday(&p_tcp_info->tstamp, NULL);
 
-			dbg_printf("*** DEVICE ***\n%s, %s, %s, %s, %s, %s, %s\n", 
+			dbg_printf("*** DEVICE ***\n%s, %s, %s, %s, %s, %s, %s\n",
 				siam.child_value("name"),
 				siam.child_value("ip"),
 				siam.child_value("port"),
@@ -653,7 +654,7 @@ int read_nc_xml(const char* filename){
 
 				asig.sa = 1; asig.sb = 0;
 				if ((p_tcp_info->ad_max-p_tcp_info->ad_min) != 0){  //scale to 16bit integer
-					// a from y=ax+b 
+					// a from y=ax+b
 					asig.sa = (p_tcp_info->ad_max - p_tcp_info->ad_min) / (asig.ad_max - asig.ad_min);
 					// b from y=ax+b
 					asig.sb = p_tcp_info->ad_min - asig.sa*asig.ad_min;
@@ -680,7 +681,7 @@ int read_nc_xml(const char* filename){
 				else if ( afie == "cn")	asig.fie = &cn;  // make scintillometer cn values bigger
 				else if ( afie == "sf")	asig.fie = &sf;  // make short a float
 				//else if ( afie == "bf")	asig.fie = &bf;  // make byte a float
-				
+
 				p_tcp_info->signals.push_back(asig);
 
 				dbg_printf("%s %s %s %d %d %d %d %p %s\n",
@@ -693,7 +694,7 @@ int read_nc_xml(const char* filename){
 
 			listofdevs.push_back(p_tcp_info);
 		}
-	}	
+	}
 	doc.reset();
 	return result;
 }
@@ -710,11 +711,11 @@ void del_tcp_list(){
 	}
 	dbg_printf("deleted %d device sockets\n",listofdevs.size());
 	listofdevs.clear();
-}	
+}
 
 // calculates the cindex for variables with freq <= 1
-// synchronizes for time jitter 
-// verder veralgemeniseren 
+// synchronizes for time jitter
+// verder veralgemeniseren
 int get_cindex(struct tcp_server_info *tcp){
 	div_t index;
 	index = div(tcp->tstamp.tv_sec, 86400);// current second of the day
@@ -731,7 +732,7 @@ int get_cindex(struct tcp_server_info *tcp){
 	tcp->last_cindex = lindex;
 
 	return lindex;
-}	
+}
 
 int scan_siam_msg(struct tcp_server_info *tcp){
 	int i;
@@ -747,11 +748,11 @@ int scan_siam_msg(struct tcp_server_info *tcp){
 					gettimeofday(&tcp->tstamp, NULL); // record time stamp
 				tcp->last_used.tv_sec = tcp->tstamp.tv_sec;
 				tcp->last_used.tv_usec = tcp->tstamp.tv_usec;
-					
+
 					//index = div(tcp->tstamp.tv_sec, proj.runlength);  // calculate current index from time
-					//dbg_printf("\nrounded index: %d, %d", tcp->tstamp.tv_usec, tcp->cindex);            
+					//dbg_printf("\nrounded index: %d, %d", tcp->tstamp.tv_usec, tcp->cindex);
 					tcp->phase = 1;
-				}	
+				}
 			break;
 			case 1: // filter M for cabauw SIAM and X for oper SIAM
 				if (tcp->buff_tcp[i] == 'M') tcp->phase = 2;
@@ -759,7 +760,7 @@ int scan_siam_msg(struct tcp_server_info *tcp){
 					tcp->msgbuf->buffer[tcp->rxbuf->rptr] = tcp->buff_tcp[i];
 					tcp->rxbuf->rptr++;
 					tcp->phase = 2;
-				}	
+				}
 			break;
 			case 2: // storing until ETX detected
 				if (tcp->buff_tcp[i] == ETX || tcp->buff_tcp[i] == 'X'){ // skip also the second and third message repetition for MUF X-SIAM's
@@ -772,10 +773,10 @@ int scan_siam_msg(struct tcp_server_info *tcp){
 					aqi->tcp = tcp;  // tcp contains constant values at this stage
 					//printf("%s %d\n",tcp->msgbuf->buffer, aqi->cindex);
 					cq.push(aqi);
-					
+
 					tcp->rxbuf->rptr = 0;
 					tcp->msgbuf->buffer[0] = 0;
-					tcp->phase = 0;	
+					tcp->phase = 0;
 				}
 				else{
 					switch (tcp->buff_tcp[i]){
@@ -784,14 +785,14 @@ int scan_siam_msg(struct tcp_server_info *tcp){
 						default: {
 							tcp->msgbuf->buffer[tcp->rxbuf->rptr] = tcp->buff_tcp[i];
 							tcp->rxbuf->rptr++;
-						}	
-					}	
-				}	
-			break;	
+						}
+					}
+				}
+			break;
 		}
 	}
 	return(tcp->len);
-}	
+}
 
 int scan_xlas_msg(struct tcp_server_info *tcp){
 	int i;
@@ -808,10 +809,10 @@ int scan_xlas_msg(struct tcp_server_info *tcp){
 				tcp->last_used.tv_usec = tcp->tstamp.tv_usec;
 					//index = div(tcp->tstamp.tv_sec, proj.runlength); // calculate time index
 					tcp->phase = 1;
-				}	
+				}
 			break;
 			case 1: // storing until linefeed detected
-				if (tcp->buff_tcp[i] == '\n' ){ 
+				if (tcp->buff_tcp[i] == '\n' ){
 					tcp->msgbuf->buffer[tcp->rxbuf->rptr+1] = 0;  // make a correct c string end
 					//dbg_printf("\n%d.%06d %s %s", tcp->tstamp.tv_sec , tcp->tstamp.tv_usec, tcp->msgbuf->buffer, tcp->src.c_str());
 
@@ -825,7 +826,7 @@ int scan_xlas_msg(struct tcp_server_info *tcp){
 					}
 					tcp->rxbuf->rptr = 0;
 					tcp->msgbuf->buffer[0] = 0;
-					tcp->phase = 0;	
+					tcp->phase = 0;
 				}
 				else{
 					switch (tcp->buff_tcp[i]){
@@ -835,26 +836,26 @@ int scan_xlas_msg(struct tcp_server_info *tcp){
 						default: {
 							tcp->msgbuf->buffer[tcp->rxbuf->rptr] = tcp->buff_tcp[i];
 							tcp->rxbuf->rptr++;
-						}	
-					}	
-				}	
-			break;	
+						}
+					}
+				}
+			break;
 		}
 	}
 	return(tcp->len);
-}	
+}
 
 int scan_gill_msg(struct tcp_server_info *tcp){
 	// hier een call naar r3.scan_buf
 	return(tcp->gill->r3Scan_buf(tcp));
-}	
+}
 
 int scan_licor_msg(struct tcp_server_info *tcp){
 	// hier een call naar r3.scan_buf
 	return(tcp->licor->LiScan_buf(tcp));
-}	
+}
 
 int scan_rotor_msg(struct tcp_server_info *tcp){
 	// hier een call naar r3.scan_buf
 	return(tcp->rotor->scan_buf(tcp));
-}	
+}
