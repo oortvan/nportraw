@@ -1,6 +1,6 @@
 # user manual
 ### Nportraw can be started in 3 ways
-* as a process in the current shell terminal
+* as a process in the current shell terminal, use only one argument: xml configuration file
 * as a process that creates the next empty runfile and aborts, use second argument -n
 * as a deamon that runs in the background, use second argument -r
 
