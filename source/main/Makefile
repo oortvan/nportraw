@@ -20,9 +20,6 @@ CCFLAGS=\
 
 NAME=nportraw
 
-LDFLAGS+=-lmoxalib -lpthread
-FNAME=status
-
 all: $(NAME)
 
 nportraw: $(NAME).cpp
